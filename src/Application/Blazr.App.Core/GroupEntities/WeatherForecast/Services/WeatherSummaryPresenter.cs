@@ -16,7 +16,7 @@ public sealed class WeatherSummaryPresenter
 
     public async ValueTask LoadAsync()
     {
-        var request = new ListQueryRequest<WeatherSummary>();
+        var request = new ListQueryRequest();
         ListQueryResult<WeatherSummary> result = await _dataBroker.GetItemsAsync<WeatherSummary>(request);
 
         if(result.Successful)

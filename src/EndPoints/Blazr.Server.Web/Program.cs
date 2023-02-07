@@ -11,13 +11,6 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddAppServerDataServices();
 builder.Services.AddAppUIServices();
 
-builder.Configuration.AddJsonFile("countries.json",
-        optional: true,
-        reloadOnChange: true);
-
-builder.Services.Configure<List<CountryData>>(
-    builder.Configuration.GetSection("Countries"));
-
 var app = builder.Build();
 
 // get the DbContext factory and add the test data

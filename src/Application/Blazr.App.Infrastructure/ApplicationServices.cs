@@ -35,6 +35,7 @@ public static class ApplicationServices
     private static void AddAppServerInfrastructureServices<TDbContext>(this IServiceCollection services, Action<DbContextOptionsBuilder> options) where TDbContext : DbContext
     {
         services.AddDbContextFactory<TDbContext>(options);
+        services.AddScoped<IDataBroker, RepositoryDataBroker>();
 
         services.AddScoped<IListRequestHandler, ListRequestHandler<InMemoryWeatherDbContext>>();
         services.AddScoped<IItemRequestHandler, ItemRequestHandler<InMemoryWeatherDbContext>>();
@@ -70,7 +71,6 @@ public static class ApplicationServices
 
         //TODO - probably don't need these anymore
         services.AddTransient<WeatherSummaryPresenter>();
-        services.AddTransient<CountryPresenter>();
     }
 
     public static void AddTestData(IServiceProvider provider)
