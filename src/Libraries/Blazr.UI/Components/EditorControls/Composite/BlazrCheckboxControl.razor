@@ -1,0 +1,18 @@
+﻿@namespace Blazr.UI
+@inherits BlazrInput<bool>
+
+<div class="mb-3 form-check">
+    @this.BaseInputControl
+    <label class="form-check-label">
+        @this.LabelName
+    </label>
+    <FieldValidationMessage For=this.ValueExpression Hint=@this.Hint />
+</div>
+@code {
+    [Parameter] public string? DisplayName { get; set; }
+    [Parameter] public string? Hint { get; set; }
+    private string? LabelName => DisplayName ?? Field.FieldName ?? null;
+
+    public BlazrCheckboxControl()
+        => this.NoValidation = true;
+}

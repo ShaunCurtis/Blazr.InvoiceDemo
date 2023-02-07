@@ -1,0 +1,19 @@
+﻿@namespace Blazr.UI
+@typeparam TValue
+@inherits BlazrSelect<TValue>
+
+<div class="form-floating">
+    @this.BaseInputControl
+    @if (this.LabelName is not null)
+    {
+        <label for="@this.ElementId">@this.LabelName</label>
+    }
+</div>
+<FieldValidationMessage For=this.ValueExpression Hint=@this.Hint />
+
+@code {
+    [Parameter] public string? DisplayName { get; set; }
+    [Parameter] public string? Hint { get; set; }
+    protected string? LabelName => DisplayName ?? Field.FieldName ?? null;
+}
+

@@ -1,0 +1,74 @@
+﻿@*
+/// ============================================================
+/// Author: Shaun Curtis, Cold Elm Coders
+/// License: Use And Donate
+/// If you use it, donate something to a charity somewhere
+/// ============================================================
+*@
+
+@namespace Blazr.UI
+@inherits UIControlBase
+@implements IDisposable
+@typeparam TValue
+
+@if (this.hasMessages)
+{
+    <div class="invalid-feedback">
+        @foreach (var message in this.messages)
+        {
+            @message <br />
+        }
+    </div>
+}
+else if (this.isChanged)
+{
+    <div class="valid-feedback">
+        @this.ValidMessage
+    </div>
+}
+else
+{
+    <div class="hint-feedback">
+        @this.Hint
+    </div>
+}
+
+@code {
+    [CascadingParameter] public IEditContext editContext { get; set; } = default!;
+
+    [Parameter] public Expression<Func<TValue>>? For { get; set; }
+    [Parameter] public string Hint { get; set; } = "Enter a value.";
+    [Parameter] public string ValidMessage { get; set; } = $"The value is valid";
+
+    private FieldReference Field = new FieldReference(new object(), "nothing");
+
+    private bool isChanged => this.editContext.FieldHasChanged(this.Field);
+    private bool hasMessages => editContext.HasValidationMessages(Field);
+    private IEnumerable<string> messages => this.editContext.GetValidationMessages(Field);
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (editContext is null)
+                throw new NullReferenceException($"{this.GetType().Name} requires a cascaded IEditContext");
+
+            if (this.For is null)
+                throw new NullReferenceException($"For cannot be null.");
+
+            this.Field = FieldUtilities.ParseAccessor(this.For);
+
+            editContext.ValidationStateUpdated += this.OnValidationStateUpdated;
+        }
+        return ValueTask.FromResult(true);
+    }
+
+    private void OnValidationStateUpdated(object? sender, ValidateStateEventArgs e)
+    {
+        if (e.Field?.FieldName.Equals(Field.FieldName) ?? false)
+            this.StateHasChanged();
+    }
+
+    public void Dispose()
+        => editContext.ValidationStateUpdated -= this.OnValidationStateUpdated;
+}

@@ -1,0 +1,47 @@
+﻿@*
+/// ============================================================
+/// Author: Shaun Curtis, Cold Elm Coders
+/// License: Use And Donate
+/// If you use it, donate something to a charity somewhere
+/// ============================================================
+*@
+
+@namespace Blazr.UI
+@typeparam TService where TService: class
+@implements IAsyncDisposable
+@inherits UIControlBase
+
+<CascadingValue Value="this.ComponentService" IsFixed>
+    @this.ChildContent
+</CascadingValue>
+
+@code {
+    [Inject] private IServiceProvider serviceProvider { get; set; } = default!;
+
+    public TService? ComponentService { get; set; } = default!;
+
+    private IDisposable? _disposable;
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            this.ComponentService = serviceProvider.GetComponentService<TService>();
+
+            if (this.ComponentService is null)
+                throw new NullReferenceException($"No {typeof(TService).FullName} cound be created.");
+
+            _disposable = this.ComponentService as IDisposable;
+        }
+
+        return ValueTask.FromResult(true);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _disposable?.Dispose();
+
+        if (this.ComponentService is IAsyncDisposable asyncDisposable)
+            await asyncDisposable.DisposeAsync();
+    }
+}

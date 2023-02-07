@@ -1,0 +1,69 @@
+﻿@namespace Blazr.App.UI
+@inject IComponentServiceProvider Provider
+@inherits UIControlBase
+@implements IDisposable
+<PageTitle>Weather forecast</PageTitle>
+
+<h1>Weather forecast</h1>
+<ComponentServiceProviderCascade ServiceType="typeof(IListPresenter<WeatherForecast, WeatherForecastEntityService>)" ComponentServiceId="this.ComponentServiceId">
+
+    <div class="col">
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in this.Presenter.ListController)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.AsTemperatureF()</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</ComponentServiceProviderCascade>
+
+@code {
+    [Parameter] public Guid ComponentServiceId { get; set; } = Guid.NewGuid();
+
+    private IListPresenter<WeatherForecast, WeatherForecastEntityService> Presenter = default!;
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var presenter = this.Provider.GetOrCreateService<IListPresenter<WeatherForecast, WeatherForecastEntityService>>(this.ComponentServiceId);
+
+            if (presenter is null)
+                throw new NullReferenceException($"No {nameof(this.Presenter)} found.");
+
+            this.Presenter = presenter;
+            this.Presenter.ListController.StateChanged += this.OnListChanged;
+        }
+
+        return base.OnParametersChangedAsync(firstRender);
+    }
+
+    private void OnListChanged(object? sender, EventArgs e)
+        => InvokeStateHasChanged();
+
+    private bool _disposed = false;
+
+    public void Dispose()
+    {
+        if (!_disposed)
+        {
+            this.Presenter.ListController.StateChanged -= this.OnListChanged;
+        }
+    }
+}

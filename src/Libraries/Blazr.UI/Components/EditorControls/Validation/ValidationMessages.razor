@@ -1,0 +1,46 @@
+﻿@*
+/// ============================================================
+/// Author: Shaun Curtis, Cold Elm Coders
+/// License: Use And Donate
+/// If you use it, donate something to a charity somewhere
+/// ============================================================
+*@
+
+@namespace Blazr.UI
+@inherits UIControlBase
+@implements IDisposable
+
+@if (this.hasMessages)
+{
+    <div class="text-danger">
+        @foreach (var message in this.messages)
+        {
+            @message <br />
+        }
+    </div>
+}
+
+@code {
+    [CascadingParameter] private IEditContext editContext { get; set; } = default!;
+
+    private bool hasMessages => this.editContext.HasValidationMessages();
+    private IEnumerable<string> messages => this.editContext.GetValidationMessages();
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (editContext is null)
+                throw new NullReferenceException($"{this.GetType().Name} requires a cascaded IEditContext");
+
+            this.editContext.ValidationStateUpdated += this.OnValidationStateUpdated;
+        }
+        return ValueTask.FromResult(true);
+    }
+
+    private void OnValidationStateUpdated(object? sender, ValidateStateEventArgs e)
+        => this.StateHasChanged();
+
+    public void Dispose()
+        => this.editContext.ValidationStateUpdated -= this.OnValidationStateUpdated;
+}

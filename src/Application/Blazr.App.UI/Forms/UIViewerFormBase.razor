@@ -1,0 +1,16 @@
+﻿@namespace Blazr.App.UI
+@typeparam TRecord where TRecord : class, new()
+@inherits UIWrapperBase
+
+@code {
+
+    protected override RenderFragment TemplatedContent => (__builder) =>
+    {
+            @this.Content
+            <div class="row">
+                <div class="col-12 text-end">
+                    <UIButton ButtonType=UIButtonType.Exit ClickEvent=this.OnExit>Exit</UIButton>
+                </div>
+            </div>
+    };
+}

@@ -1,0 +1,17 @@
+﻿.hint-feedback {
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 80%;
+}
+
+.valid-feedback {
+    display: block;
+    margin-top: 0.25rem;
+        font-size: 80%;
+}

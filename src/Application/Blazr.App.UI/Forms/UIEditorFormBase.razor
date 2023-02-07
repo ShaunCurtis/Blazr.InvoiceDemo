@@ -1,0 +1,28 @@
+﻿@namespace Blazr.App.UI
+@typeparam TRecord where TRecord : class, new()
+@typeparam TEditContext where TEditContext : class, IEditContext, IRecordEditContext<TRecord>, new()
+@inherits UIWrapperBase
+
+@code {
+    private bool _noSave => !(this.Presenter.EditStateContext.IsDirty && this.Presenter.EditStateContext.IsValid);
+    private bool _isDirty => this.Presenter.EditStateContext.IsDirty;
+    private bool _isClean => !this.Presenter.EditStateContext.IsDirty;
+
+    protected override RenderFragment TemplatedContent => (__builder) =>
+    {
+        <CascadingValue Value="Presenter.EditStateContext">
+            @this.Content
+            <div class="row">
+                <div class="col-12 text-end">
+                    <UIButton ButtonType=UIButtonType.Warning Hidden=_isClean ClickEvent=this.OnReset>Reset</UIButton>
+                    <UIButton ButtonType=UIButtonType.Save Hidden=_noSave ClickEvent=this.OnSave>Save</UIButton>
+                    <UIButton ButtonType=UIButtonType.Exit Hidden=_isDirty ClickEvent=this.OnExit>Exit</UIButton>
+                    <UIButton ButtonType=UIButtonType.ExitWithoutSave Hidden=_isClean ClickEvent=this.OnExit>Exit without Saving</UIButton>
+                </div>
+            </div>
+        </CascadingValue>
+
+        <NavigationLock ConfirmExternalNavigation=this.Presenter.EditStateContext.IsDirty />
+
+    };
+}

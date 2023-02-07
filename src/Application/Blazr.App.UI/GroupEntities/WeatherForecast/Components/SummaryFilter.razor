@@ -1,0 +1,64 @@
+﻿@using System.Linq.Expressions;
+@namespace Blazr.App.UI
+
+@inherits UIControlBase
+@implements IDisposable
+@implements IListFilterProvider
+
+<InputSelect class="form-select form-select-sm" TValue="string" Value="@_summary" ValueChanged=this.OnChange ValueExpression="() => _summary">
+    <option value="">-- No Summary Filter Selected --</option>
+    @foreach (var summary in Summaries)
+    {
+        <option value="@summary">@summary</option>
+    }
+</InputSelect>
+
+@code {
+    [CascadingParameter] private ListController<WeatherForecast>? ListController { get; set; }
+
+    private string? _summary;
+
+    private ListController<WeatherForecast> _listController = default!;
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (this.ListController is null)
+            throw new NullReferenceException("There's no cascaded ListController.");
+
+        _listController = this.ListController;
+
+        if (firstRender)
+        {
+            _listController.RegisterFilter(this);
+            _listController.StateChanged += this.OnStateChanged;
+        }
+
+        return ValueTask.FromResult(true);
+    }
+
+    private async Task OnChange(string value)
+    {
+        List<FilterDefinition> filters = new();
+
+        _summary = value;
+
+        if (!string.IsNullOrWhiteSpace(value))
+            filters.Add(new FilterDefinition { FilterName = WeatherForecastConstants.BySummary, FilterData = value });
+
+        FilterRequest<WeatherForecast> request = new FilterRequest<WeatherForecast> { Filters = filters };
+
+        await _listController.NotifyFilteringRequestedAsync(this, new FilterEventArgs<WeatherForecast> { Request = request });
+    }
+
+    private void OnStateChanged(object? sender, EventArgs e)
+        => this.StateHasChanged();
+
+    public void Dispose()
+        => _listController.StateChanged -= this.OnStateChanged;
+
+    public static readonly string[] Summaries = new[]
+    {
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
+
+}
