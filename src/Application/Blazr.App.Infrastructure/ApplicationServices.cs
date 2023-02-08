@@ -8,12 +8,12 @@ namespace Blazr.App.Infrastructure;
 public static class ApplicationServices
 {
     public static void AddAppServerDataServices(this IServiceCollection services)
-        => services.AddAppServerDataServices<InMemoryWeatherDbContext>(options
-            => options.UseInMemoryDatabase($"WeatherDatabase-{Guid.NewGuid().ToString()}"));
+        => services.AddAppServerDataServices<InMemoryInvoiceDbContext>(options
+            => options.UseInMemoryDatabase($"InvoiceDatabase-{Guid.NewGuid().ToString()}"));
 
     public static void AddAppTestDataServices(this IServiceCollection services)
-        => services.AddDbContextFactory<InMemoryWeatherDbContext>(options
-            => options.UseInMemoryDatabase($"WeatherDatabase-{Guid.NewGuid().ToString()}"));
+        => services.AddDbContextFactory<InMemoryInvoiceDbContext>(options
+            => options.UseInMemoryDatabase($"InvoiceDatabase-{Guid.NewGuid().ToString()}"));
 
     public static void AddAppServerDataServices<TDbContext>(this IServiceCollection services, Action<DbContextOptionsBuilder> options) where TDbContext : DbContext
     {
@@ -37,11 +37,11 @@ public static class ApplicationServices
         services.AddDbContextFactory<TDbContext>(options);
         services.AddScoped<IDataBroker, RepositoryDataBroker>();
 
-        services.AddScoped<IListRequestHandler, ListRequestHandler<InMemoryWeatherDbContext>>();
-        services.AddScoped<IItemRequestHandler, ItemRequestHandler<InMemoryWeatherDbContext>>();
-        services.AddScoped<IUpdateRequestHandler, UpdateRequestHandler<InMemoryWeatherDbContext>>();
-        services.AddScoped<ICreateRequestHandler, CreateRequestHandler<InMemoryWeatherDbContext>>();
-        services.AddScoped<IDeleteRequestHandler, DeleteRequestHandler<InMemoryWeatherDbContext>>();
+        services.AddScoped<IListRequestHandler, ListRequestHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<IItemRequestHandler, ItemRequestHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<IUpdateRequestHandler, UpdateRequestHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<ICreateRequestHandler, CreateRequestHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<IDeleteRequestHandler, DeleteRequestHandler<InMemoryInvoiceDbContext>>();
     }
 
     private static void AddAppWASMInfraStructureServices(this IServiceCollection services)
@@ -57,28 +57,18 @@ public static class ApplicationServices
 
     private static void AddAppDataServices(this IServiceCollection services)
     {
-        services.AddScoped<IListPresenter<WeatherForecast, WeatherForecastEntityService>, ListPresenter<WeatherForecast, WeatherForecastEntityService>>();
-        services.AddScoped<WeatherForecastEntityService>();
-        services.AddScoped<INotificationService<WeatherForecastEntityService>, NotificationService<WeatherForecastEntityService>>();
-        services.AddTransient<IEditPresenter<WeatherForecast, WeatherForecastEditContext>, EditPresenter<WeatherForecast, WeatherForecastEntityService, WeatherForecastEditContext>>();
-        services.AddTransient<IReadPresenter<WeatherForecast>, ReadPresenter<WeatherForecast>>();
-        services.AddTransient<IRecordSorter<WeatherForecast>, WeatherForecastSorter>();
-        services.AddTransient<IRecordFilter<WeatherForecast>, WeatherForecastFilter>();
-        services.AddTransient<ListController<WeatherForecast>>();
-
-        //TODO probably don't need this anymore
-        services.AddScoped<IComponentServiceProvider, ComponentServiceProvider>();
-
-        //TODO - probably don't need these anymore
-        services.AddTransient<WeatherSummaryPresenter>();
+        services.AddCustomerCoreServices();
+        services.AddProductCoreServices();
+        services.AddInvoiceCoreServices();
+        services.AddInvoiceItemCoreServices();
     }
 
     public static void AddTestData(IServiceProvider provider)
     {
-        var factory = provider.GetService<IDbContextFactory<InMemoryWeatherDbContext>>();
+        var factory = provider.GetService<IDbContextFactory<InMemoryInvoiceDbContext>>();
 
         if (factory is not null)
-            WeatherTestDataProvider.Instance().LoadDbContext<InMemoryWeatherDbContext>(factory);
+            InvoiceTestDataProvider.Instance().LoadDbContext<InMemoryInvoiceDbContext>(factory);
     }
 
 }

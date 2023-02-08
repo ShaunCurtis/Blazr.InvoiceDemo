@@ -25,7 +25,7 @@ public readonly struct ApplicationConstants
     public const string InvoicePrice = "InvoicePrice";
 
     public const string ByCustomerUid = "ByCustomerUid";
-    public const string ByInvoiceDate = "ByInvoiceDate";
+    public const string ByInvoiceMonth = "ByInvoiceMonth";
 
     //InvoiceItem
     public const string InvoiceUid = "InvoiceUid";
