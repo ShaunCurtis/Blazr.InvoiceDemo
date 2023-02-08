@@ -10,7 +10,7 @@ public partial class UIPagedListFormBase<TRecord, TEntityService> : UIWrapperBas
     where TEntityService : class, IEntityService
 {
     [Inject] protected IServiceProvider ServiceProvider { get; set; } = default!;
-    [Inject] protected IUIEntityService<WeatherForecastEntityService> UIEntityService { get; set; } = default!;
+    [Inject] protected IUIEntityService<TEntityService> UIEntityService { get; set; } = default!;
     [Inject] protected NavigationManager NavManager { get; set; } = default!;
 
     [Parameter] public Guid StateId { get; set; } = Guid.Empty;
@@ -56,15 +56,15 @@ public partial class UIPagedListFormBase<TRecord, TEntityService> : UIWrapperBas
             this.NavManager.NavigateTo($"{this.UIEntityService.Url}/edit/{id}");
     }
 
-    protected async Task OnViewAsync(WeatherForecast record)
+    protected async Task OnViewAsync(TRecord record)
     {
         var id = RecordUtilities.GetIdentity(record);
         var options = new ModalOptions();
         options.ControlParameters.Add("Uid", id);
 
-        if (modalDialog is not null && this.UIEntityService.EditForm is not null)
+        if (modalDialog is not null && this.UIEntityService.ViewForm is not null)
         {
-            await modalDialog.ShowAsync(this.UIEntityService.EditForm, options);
+            await modalDialog.ShowAsync(this.UIEntityService.ViewForm, options);
             this.StateHasChanged();
         }
         else

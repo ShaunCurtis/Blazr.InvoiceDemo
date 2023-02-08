@@ -9,7 +9,8 @@ namespace Blazr.Core;
 public interface IRecordFilter<TRecord>
     where TRecord : class
 {
-    public IPredicateExpressionSpecification<TRecord>? GetSpecification(FilterDefinition filter);
+    public IPredicateSpecification<TRecord>? GetSpecification(FilterDefinition filter)
+        => null;
 
     public IQueryable<TRecord> AddFilterToQuery(IEnumerable<FilterDefinition> filters, IQueryable<TRecord> query)
     {
@@ -25,5 +26,4 @@ public interface IRecordFilter<TRecord>
 
         return query.AsQueryable();
     }
-
 }

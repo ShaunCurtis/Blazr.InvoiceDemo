@@ -5,11 +5,11 @@
 /// ============================================================
 namespace Blazr.App.Controllers;
 
-[ApiController]
+//[ApiController]
 //[Authorize(Roles = "VisitorRole, UserRole, AdminRole")]
-public class WeatherForecastController : AppControllerBase<WeatherForecast>
-{
-    public WeatherForecastController(IDataBroker dataBroker)
-        : base(dataBroker)
-    { }
-}
+//public class WeatherForecastController : AppControllerBase<WeatherForecast>
+//{
+//    public WeatherForecastController(IDataBroker dataBroker)
+//        : base(dataBroker)
+//    { }
+//}

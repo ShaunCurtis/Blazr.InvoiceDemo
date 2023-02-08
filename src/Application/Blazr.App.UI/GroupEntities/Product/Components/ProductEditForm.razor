@@ -1,0 +1,21 @@
+﻿@namespace Blazr.App.UI
+@inherits UIEditorFormBase<Invoice, InvoiceEditContext, InvoiceEntityService>
+
+<div class="row">
+
+    <div class="col-12 col-lg-6 mb-2">
+        <BlazrInputControl Type=InputType.Date class="form-control" DisplayName="Invoice Date" UpdateOnInput=true @bind-Value=this.EditContext.InvoiceDate />
+    </div>
+
+</div>
+
+@code {
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (firstRender)
+            this.Presenter.EditStateContext.AddFluentValidation<InvoiceValidator>();
+
+        return ValueTask.FromResult(true);
+    }
+}

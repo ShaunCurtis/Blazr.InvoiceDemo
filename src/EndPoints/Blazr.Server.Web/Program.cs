@@ -14,9 +14,9 @@ builder.Services.AddAppUIServices();
 var app = builder.Build();
 
 // get the DbContext factory and add the test data
-var factory = app.Services.GetService<IDbContextFactory<InMemoryWeatherDbContext>>();
+var factory = app.Services.GetService<IDbContextFactory<InMemoryInvoiceDbContext>>();
 if (factory is not null)
-    WeatherTestDataProvider.Instance().LoadDbContext<InMemoryWeatherDbContext>(factory);
+    InvoiceTestDataProvider.Instance().LoadDbContext<InMemoryInvoiceDbContext>(factory);
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

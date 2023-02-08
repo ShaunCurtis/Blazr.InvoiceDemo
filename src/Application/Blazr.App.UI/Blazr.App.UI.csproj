@@ -21,4 +21,15 @@
     <ProjectReference Include="..\Blazr.App.Core\Blazr.App.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="GroupEntities\InvoiceItem\Components\" />
+    <Folder Include="GroupEntities\InvoiceItem\Routes\" />
+    <Folder Include="GroupEntities\Product\Components\" />
+    <Folder Include="GroupEntities\Invoice\Components\" />
+    <Folder Include="GroupEntities\Invoice\Routes\" />
+    <Folder Include="GroupEntities\Product\Routes\" />
+    <Folder Include="GroupEntities\Customer\Components\" />
+    <Folder Include="GroupEntities\Customer\Routes\" />
+  </ItemGroup>
+
 </Project>

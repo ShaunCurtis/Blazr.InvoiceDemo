@@ -1,0 +1,22 @@
+﻿@namespace Blazr.App.UI
+@inherits UIPagedListFormBase<Product, ProductEntityService>
+
+<BlazrSortedGridColumn TGridItem="Product" SortField="@ApplicationConstants.ProductCode" IsNoWrap=true Title="Product Code">
+    @context.ProductCode
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="Product" IsMaxColumn=true SortField="@ApplicationConstants.ProductName" IsNoWrap=true Title="Product Name">
+    @context.ProductName
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="Product" SortField="@ApplicationConstants.ProductUnitPrice" class="text-end pe-2" Title="Unit Price">
+    @context.PriceAsCurrency()
+</BlazrSortedGridColumn>
+
+<BlazrGridColumn TGridItem="Product" Title="Actions" IsNoWrap=true Class="text-end">
+    <UIButtonGroup>
+        <button class="btn btn-sm btn-secondary" @onclick="() => OnViewAsync(context)">View</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => OnEditAsync(context)">Edit</button>
+    </UIButtonGroup>
+</BlazrGridColumn>
+

@@ -5,11 +5,13 @@
 /// ============================================================
 namespace Blazr.App.UI;
 
-public abstract partial class UIViewerFormBase<TRecord> : UIWrapperBase
+public abstract partial class UIViewerFormBase<TRecord, TEntityService> : UIWrapperBase
     where TRecord : class, new()
+    where TEntityService : class, IEntityService
 {
     [Inject] protected IReadPresenter<TRecord> Presenter { get; set; } = default!;
     [Inject] protected NavigationManager NavManager { get; set; } = default!;
+    [Inject] protected IUIEntityService<TEntityService> UIEntityService { get; set; } = default!;
 
     [CascadingParameter] private IModalDialog? ModalDialog { get; set; }
     [Parameter] public Guid Uid { get; set; }

@@ -1,11 +1,17 @@
 ﻿@namespace Blazr.App.UI
 @typeparam TRecord where TRecord : class, new()
+@typeparam TEntityService where TEntityService : class, IEntityService
 @inherits UIWrapperBase
 
 @code {
+    protected string FormTitle => $"{this.UIEntityService.SingleDisplayName} Viewer";
 
     protected override RenderFragment TemplatedContent => (__builder) =>
     {
+        <PageTitle>@this.FormTitle</PageTitle>
+
+        <h3 class="mb-4 pb-3 border-bottom">@this.FormTitle</h3>
+
             @this.Content
             <div class="row">
                 <div class="col-12 text-end">

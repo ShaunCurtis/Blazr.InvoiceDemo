@@ -19,4 +19,6 @@ public sealed record InvoiceView : IGuidIdentity
     public DateOnly InvoiceDate { get; init; } = DateOnly.FromDateTime(DateTime.MinValue);
 
     public string InvoiceNumber { get; init; } = "Not Set";
+
+    public decimal InvoicePrice { get; init; }
 }

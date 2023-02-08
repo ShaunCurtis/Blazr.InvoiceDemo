@@ -1,15 +1,21 @@
 ﻿@namespace Blazr.App.UI
 @typeparam TRecord where TRecord : class, new()
 @typeparam TEditContext where TEditContext : class, IEditContext, IRecordEditContext<TRecord>, new()
+@typeparam TEntityService where TEntityService : class, IEntityService
 @inherits UIWrapperBase
 
 @code {
     private bool _noSave => !(this.Presenter.EditStateContext.IsDirty && this.Presenter.EditStateContext.IsValid);
     private bool _isDirty => this.Presenter.EditStateContext.IsDirty;
     private bool _isClean => !this.Presenter.EditStateContext.IsDirty;
+    protected string FormTitle => $"{this.UIEntityService.SingleDisplayName} Editor";
 
     protected override RenderFragment TemplatedContent => (__builder) =>
     {
+        <PageTitle>@this.FormTitle</PageTitle>
+
+        <h3 class="mb-4 pb-3 border-bottom">@this.FormTitle</h3>
+
         <CascadingValue Value="Presenter.EditStateContext">
             @this.Content
             <div class="row">
@@ -23,6 +29,5 @@
         </CascadingValue>
 
         <NavigationLock ConfirmExternalNavigation=this.Presenter.EditStateContext.IsDirty />
-
     };
 }

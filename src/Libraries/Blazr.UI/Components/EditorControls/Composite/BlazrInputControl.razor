@@ -12,7 +12,7 @@
 <FieldValidationMessage For=this.ValueExpression Hint=@this.Hint />
 
 @code {
-    [Parameter] public MarkupString? DisplayName { get; set; }
+    [Parameter] public string? DisplayName { get; set; }
     [Parameter] public string? Hint { get; set; }
-    protected MarkupString? LabelName => DisplayName ?? ((MarkupString)Field.FieldName);
+    protected MarkupString? LabelName => this.DisplayName is not null ? (MarkupString)DisplayName : ((MarkupString)Field.FieldName);
 }

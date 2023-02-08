@@ -1,0 +1,21 @@
+﻿@namespace Blazr.App.UI
+@inherits UIEditorFormBase<Customer, CustomerEditContext, CustomerEntityService>
+
+<div class="row">
+
+    <div class="col-12 col-lg-6 mb-2">
+        <BlazrInputControl Type=InputType.Text class="form-control" DisplayName="Customer Name" UpdateOnInput=true @bind-Value=this.EditContext.CustomerName />
+    </div>
+
+</div>
+
+@code {
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        if (firstRender)
+            this.Presenter.EditStateContext.AddFluentValidation<CustomerValidator>();
+
+        return ValueTask.FromResult(true);
+    }
+}

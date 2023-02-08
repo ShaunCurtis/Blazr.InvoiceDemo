@@ -11,8 +11,6 @@ public sealed record ListQueryRequest
     public int PageSize { get; init; } = 1000;
     public CancellationToken Cancellation { get; set; } = new();
     public bool SortDescending { get; init; } = false;
-    //public Expression<Func<TRecord, bool>>? FilterExpression { get; init; }
-    //public Expression<Func<TRecord, object>>? SortExpression { get; init; }
     public IEnumerable<FilterDefinition> Filters { get; init; } = Enumerable.Empty<FilterDefinition>();
     public string SortField { get; init; } = string.Empty;
 

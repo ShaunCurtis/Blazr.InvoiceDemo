@@ -6,7 +6,7 @@
 
 namespace Blazr.App.Core;
 
-public class InvoicesByMonthSpecification : PredicateExpressionSpecification<Invoice>
+public class InvoicesByMonthSpecification : PredicateSpecification<Invoice>
 {
     private int _month;
     private int _year;

@@ -6,12 +6,14 @@
 
 namespace Blazr.App.UI;
 
-public abstract partial class UIEditorFormBase<TRecord, TEditContext> : UIWrapperBase, IDisposable
+public abstract partial class UIEditorFormBase<TRecord, TEditContext, TEntityService> : UIWrapperBase, IDisposable
     where TRecord : class, new()
     where TEditContext : class, IEditContext, IRecordEditContext<TRecord>, new()
+    where TEntityService : class, IEntityService
 {
     [Inject] protected IEditPresenter<TRecord, TEditContext> Presenter { get; set; } = default!;
     [Inject] protected NavigationManager NavManager { get; set; } = default!;
+    [Inject] protected IUIEntityService<TEntityService> UIEntityService { get; set; } = default!;
 
     [CascadingParameter] private IModalDialog? ModalDialog { get; set; }
     [Parameter] public Guid Uid { get; set; }
@@ -23,7 +25,7 @@ public abstract partial class UIEditorFormBase<TRecord, TEditContext> : UIWrappe
     public async override Task SetParametersAsync(ParameterView parameters)
     {
         parameters.SetParameterProperties(this);
-        if(!initialized)
+        if (!initialized)
         {
             EditContext = (TEditContext)this.Presenter.EditStateContext;
             await this.Presenter.LoadAsync(Uid);
@@ -46,7 +48,7 @@ public abstract partial class UIEditorFormBase<TRecord, TEditContext> : UIWrappe
         return Task.CompletedTask;
     }
 
-    protected void OnEditStateChanged(object? sender, EventArgs e )
+    protected void OnEditStateChanged(object? sender, EventArgs e)
         => this.StateHasChanged();
 
     protected async Task OnReset()
@@ -61,7 +63,7 @@ public abstract partial class UIEditorFormBase<TRecord, TEditContext> : UIWrappe
     }
 
     public void Dispose()
-    { 
+    {
         _disposable?.Dispose();
         this.EditContext.EditStateChanged -= OnEditStateChanged;
     }

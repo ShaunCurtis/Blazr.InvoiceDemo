@@ -40,4 +40,7 @@ public static class DisplayExtensions
 
     public static string AsPercent(this decimal value)
         => $"{value:N3}%";
+
+    public static string AsSterling(this decimal value)
+        => $"£{value:N2}";
 }
