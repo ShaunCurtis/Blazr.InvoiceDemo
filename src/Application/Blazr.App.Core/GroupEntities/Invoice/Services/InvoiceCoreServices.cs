@@ -17,6 +17,7 @@ public static class InvoiceCoreServices
         services.AddTransient<IReadPresenter<Invoice>, ReadPresenter<Invoice>>();
         services.AddTransient<IReadPresenter<InvoiceView>, ReadPresenter<InvoiceView>>();
         services.AddTransient<IRecordSorter<Invoice>, InvoiceSorter>();
+        services.AddTransient<IRecordSorter<InvoiceView>, InvoiceViewSorter>();
         services.AddTransient<IRecordFilter<Invoice>, InvoiceFilter>();
         services.AddTransient<ListController<Invoice>>();
         services.AddTransient<ListController<InvoiceView>>();

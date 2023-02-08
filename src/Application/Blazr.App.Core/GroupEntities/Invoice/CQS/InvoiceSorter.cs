@@ -3,19 +3,15 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-using System.Linq.Expressions;
 
 namespace Blazr.App.Core;
 
-public class InvoiceSorter : RecordSortBase<Invoice>, IRecordSorter<Invoice>
+public class InvoiceSorter : RecordSorter<Invoice>, IRecordSorter<Invoice>
 {
-    public IQueryable<Invoice> AddSortToQuery(string fieldName, IQueryable<Invoice> query, bool sortDescending)
-        => fieldName switch
-        {
-            ApplicationConstants.InvoiceNumber => Sort(query, sortDescending, OnInvoiceNumber),
-            _ => Sort(query, sortDescending, OnInvoiceDate)
-        };
+    protected override Expression<Func<Invoice, object>>? DefaultSorter => item => item.InvoiceDate;
+}
 
-private static Expression<Func<Invoice, object>> OnInvoiceDate => item => item.InvoiceDate;
-private static Expression<Func<Invoice, object>> OnInvoiceNumber => item => item.InvoiceNumber ?? string.Empty;
+public class InvoiceViewSorter : RecordSorter<InvoiceView>, IRecordSorter<InvoiceView>
+{
+    protected override Expression<Func<InvoiceView, object>>? DefaultSorter => item => item.InvoiceDate;
 }

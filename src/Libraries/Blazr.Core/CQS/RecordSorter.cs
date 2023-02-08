@@ -7,14 +7,27 @@ using System.Reflection;
 
 namespace Blazr.Core;
 
-public class RecordSortBase<TRecord>
+public class RecordSorter<TRecord>
     where TRecord : class
 {
-    protected static IQueryable<TRecord> Sort(IQueryable<TRecord> query, bool sortDescending, Expression<Func<TRecord, object>> sorter)
+    protected virtual Expression<Func<TRecord, object>>? DefaultSorter => null;
+
+    public IQueryable<TRecord> AddSortToQuery(string fieldName, IQueryable<TRecord> query, bool sortDescending)
+        => Sort(query, sortDescending, fieldName);
+
+    protected IQueryable<TRecord> Sort(IQueryable<TRecord> query, bool sortDescending, string field)
     {
-        return sortDescending
-            ? query.OrderByDescending(sorter)
-            : query.OrderBy(sorter);
+        Expression<Func<TRecord, object>>? expression = null;
+
+        if (!TryBuildSortExpression(field, out expression))
+            expression = this.DefaultSorter;
+
+        if (expression is not null)
+            return sortDescending
+            ? query.OrderByDescending(expression)
+            : query.OrderBy(expression);
+
+        return query;
     }
 
     protected static bool TryBuildSortExpression(string sortField, [NotNullWhen(true)] out Expression<Func<TRecord, object>>? expression)
