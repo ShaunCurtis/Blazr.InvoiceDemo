@@ -12,6 +12,7 @@ public static class CustomerCoreServices
         services.AddScoped<IListPresenter<Customer, CustomerEntityService>, ListPresenter<Customer, CustomerEntityService>>();
         services.AddScoped<CustomerEntityService>();
         services.AddScoped<INotificationService<CustomerEntityService>, NotificationService<CustomerEntityService>>();
+        services.AddScoped<IForeignKeyPresenter<CustomerFkItem, CustomerEntityService>, ForeignKeyPresenter<CustomerFkItem, CustomerEntityService>>();
         services.AddTransient<IEditPresenter<Customer, CustomerEditContext>, EditPresenter<Customer, CustomerEntityService, CustomerEditContext>>();
         services.AddTransient<IReadPresenter<Customer>, ReadPresenter<Customer>>();
         services.AddTransient<IRecordSorter<Customer>, CustomerSorter>();

@@ -15,15 +15,18 @@ public class ForeignKeyPresenter<TFkItem, TEntityService>
     protected IDataBroker DataBroker;
     private bool _firstLoad = true;
 
+    public Task LoadTask { get; private set; } = Task.CompletedTask;
+
     public IEnumerable<IFkItem> Items { get; protected set; } = Enumerable.Empty<TFkItem>();
 
     public ForeignKeyPresenter(IDataBroker dataBroker, INotificationService<TEntityService> notificationService)
     {
         NotificationService = notificationService;
         DataBroker = dataBroker;
+        LoadTask = Load();
     }
 
-    public async ValueTask<bool> GetFkList()
+    public async Task<bool> Load()
     {
         if (_firstLoad)
             this.NotificationService.ListChanged += OnUpdate;
@@ -36,7 +39,7 @@ public class ForeignKeyPresenter<TFkItem, TEntityService>
     }
 
     public async void OnUpdate(object? sender, EventArgs e)
-        => await this.GetFkList();
+        => await this.Load();
 
     public void Dispose()
     {

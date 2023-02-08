@@ -1,21 +1,42 @@
 ﻿@namespace Blazr.App.UI
-@inherits UIEditorFormBase<Customer, CustomerEditContext, CustomerEntityService>
+@inject IForeignKeyPresenter<CustomerFkItem, CustomerEntityService> CustomerPresenter
+@inherits UIEditorFormBase<Invoice, InvoiceEditContext, InvoiceEntityService>
 
 <div class="row">
 
     <div class="col-12 col-lg-6 mb-2">
-        <BlazrInputControl Type=InputType.Text class="form-control" DisplayName="Customer Name" UpdateOnInput=true @bind-Value=this.EditContext.CustomerName />
+        <BlazrInputControl Type=InputType.Date class="form-control" DisplayName="Date" UpdateOnInput=true @bind-Value=this.EditContext.InvoiceDate />
+    </div>
+
+    <div class="col-12 col-lg-6 mb-2">
+        <BlazrSelectControl class="form-control" DisplayName="Customer" @bind-Value=this.EditContext.CustomerUid>
+            @this.CustomerList
+        </BlazrSelectControl>
     </div>
 
 </div>
 
 @code {
 
-    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    protected override async ValueTask<bool> OnParametersChangedAsync(bool firstRender)
     {
         if (firstRender)
-            this.Presenter.EditStateContext.AddFluentValidation<CustomerValidator>();
+            this.Presenter.EditStateContext.AddFluentValidation<InvoiceValidator>();
 
-        return ValueTask.FromResult(true);
+        await this.CustomerPresenter.LoadTask;
+        return true;
     }
+
+    private RenderFragment CustomerList => __builder =>
+    {
+        if (this.EditContext.CustomerUid == Guid.Empty)
+        {
+            <option disabled selected value="@Guid.Empty"> -- Choose A Customer -- </option>
+        }
+
+        foreach (var item in this.CustomerPresenter.Items)
+        {
+            <option value="@item.Uid">@item.Name</option>
+        }
+    };
 }

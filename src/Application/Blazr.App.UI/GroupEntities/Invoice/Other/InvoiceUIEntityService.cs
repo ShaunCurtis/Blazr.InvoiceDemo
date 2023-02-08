@@ -10,7 +10,7 @@ public sealed record InvoiceUIEntityService : IUIEntityService<InvoiceEntityServ
 {
     public string SingleDisplayName { get; } = "Invoice";
     public string PluralDisplayName { get; } = "Invoices";
-    public Type? EditForm { get; } = typeof(CustomerEditForm);
-    public Type? ViewForm { get; } = typeof(CustomerViewForm);
+    public Type? EditForm { get; } = typeof(InvoiceEditForm);
+    public Type? ViewForm { get; } = typeof(InvoiceViewForm);
     public string Url { get; } = "/invoice";
 }

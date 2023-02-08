@@ -12,6 +12,7 @@ public static class ProductServices
         services.AddScoped<IListPresenter<Product, ProductEntityService>, ListPresenter<Product, ProductEntityService>>();
         services.AddScoped<ProductEntityService>();
         services.AddScoped<INotificationService<ProductEntityService>, NotificationService<ProductEntityService>>();
+        services.AddScoped<IForeignKeyPresenter<ProductFkItem, ProductEntityService>, ForeignKeyPresenter<ProductFkItem, ProductEntityService>>();
         services.AddTransient<IEditPresenter<Product, ProductEditContext>, EditPresenter<Product, ProductEntityService, ProductEditContext>>();
         services.AddTransient<IReadPresenter<Product>, ReadPresenter<Product>>();
         services.AddTransient<IRecordSorter<Product>, ProductSorter>();

@@ -10,7 +10,9 @@ public interface IForeignKeyPresenter<TFkItem, TEntityService>
     where TFkItem : class, IFkItem, new()
     where TEntityService : class, IEntityService
 {
+    public Task LoadTask { get; }
+
     public IEnumerable<IFkItem> Items { get; }
 
-    public ValueTask<bool> GetFkList();
+    public Task<bool> Load();
 }
