@@ -10,6 +10,7 @@ namespace Blazr.App.Infrastructure;
 /// </summary>
 public sealed class InvoiceTestDataProvider
 {
+    public IEnumerable<User> Users => _users ?? Enumerable.Empty<User>();
     public IEnumerable<Product> Products => _products ?? Enumerable.Empty<Product>();
     public IEnumerable<Customer> Customers => _customers ?? Enumerable.Empty<Customer>();
     public IEnumerable<Invoice> Invoices => _invoices ?? Enumerable.Empty<Invoice>();
@@ -19,7 +20,9 @@ public sealed class InvoiceTestDataProvider
     private List<Customer>? _customers;
     private List<Invoice>? _invoices;
     private List<InvoiceItem>? _invoiceItems;
+    private List<User>? _users;
 
+    //878e0a17-97d1-46db-a80c-bb12e467c50c
     private InvoiceTestDataProvider()
         => this.Load();
 
@@ -66,6 +69,16 @@ public sealed class InvoiceTestDataProvider
             dbContext.AddRange(this.InvoiceItems);
             dbContext.SaveChanges();
         }
+
+        var users = dbContext.Set<User>();
+
+        // Check if we already have a full data set
+        // If not clear down any existing data and start again
+        if (users.Count() == 0)
+        {
+            dbContext.AddRange(this.Users);
+            dbContext.SaveChanges();
+        }
     }
 
     public void Load()
@@ -74,6 +87,19 @@ public sealed class InvoiceTestDataProvider
         LoadCustomers();
         LoadInvoices();
         LoadInvoiceItems();
+        LoadUsers();    
+    }
+
+    private void LoadUsers()
+    {
+        var users = new List<User>()
+        {
+            new() { Uid=Guid.Parse("00000000-0000-0000-0000-000000000001"), UserName="Visitor", Roles="VisitorRole"},
+            new() { Uid=Guid.Parse("10000000-0000-0000-0000-000000000001"), UserName="User-1", Roles="UserRole"},
+            new() { Uid=Guid.Parse("10000000-0000-0000-0000-000000000002"), UserName="User-2", Roles="UserRole"},
+            new() { Uid=Guid.Parse("20000000-0000-0000-0000-000000000001"), UserName="Admin", Roles="AdminRole"},
+        };
+        _users= users;
     }
 
     private void LoadProducts()
@@ -107,7 +133,6 @@ public sealed class InvoiceTestDataProvider
         };
         _products = products;
     }
-
 
     private void LoadCustomers()
     {

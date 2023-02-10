@@ -8,6 +8,7 @@ namespace Blazr.Infrastructure;
 public sealed class InMemoryInvoiceDbContext
     : DbContext
 {
+    public DbSet<User> User { get; set; } = default!;
     public DbSet<Customer> Customer { get; set; } = default!;
     public DbSet<Product> Product { get; set; } = default!;
     public DbSet<Invoice> Invoice { get; set; } = default!;
@@ -21,6 +22,7 @@ public sealed class InMemoryInvoiceDbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<User>().ToTable("User");
         modelBuilder.Entity<Customer>().ToTable("Customer");
         modelBuilder.Entity<Product>().ToTable("Product");
         modelBuilder.Entity<Invoice>().ToTable("Invoice");
