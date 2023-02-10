@@ -94,10 +94,10 @@ public sealed class InvoiceTestDataProvider
     {
         var users = new List<User>()
         {
-            new() { Uid=Guid.Parse("00000000-0000-0000-0000-000000000001"), UserName="Visitor", Roles="VisitorRole"},
-            new() { Uid=Guid.Parse("10000000-0000-0000-0000-000000000001"), UserName="User-1", Roles="UserRole"},
-            new() { Uid=Guid.Parse("10000000-0000-0000-0000-000000000002"), UserName="User-2", Roles="UserRole"},
-            new() { Uid=Guid.Parse("20000000-0000-0000-0000-000000000001"), UserName="Admin", Roles="AdminRole"},
+            new() { Uid=Guid.Parse("10000000-0000-0000-0000-000000000001"), UserName="Visitor-1", Roles="VisitorRole"},
+            new() { Uid=Guid.Parse("20000000-0000-0000-0000-000000000001"), UserName="User-1", Roles="UserRole"},
+            new() { Uid=Guid.Parse("20000000-0000-0000-0000-000000000002"), UserName="User-2", Roles="UserRole"},
+            new() { Uid=Guid.Parse("30000000-0000-0000-0000-000000000001"), UserName="Admin-1", Roles="AdminRole"},
         };
         _users= users;
     }

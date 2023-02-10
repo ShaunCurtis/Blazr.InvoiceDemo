@@ -1,3 +1,4 @@
+using Blazr.App.Core.Auth;
 using Blazr.App.Infrastructure;
 using Blazr.App.UI;
 using Blazr.Infrastructure;
@@ -10,7 +11,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAppServerDataServices();
 builder.Services.AddAppUIServices();
-
+builder.Services.AddAppServerAuthServices();
 var app = builder.Build();
 
 // get the DbContext factory and add the test data

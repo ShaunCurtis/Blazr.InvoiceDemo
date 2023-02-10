@@ -1,0 +1,31 @@
+﻿@typeparam TItem
+@typeparam TValue
+
+<select @attributes=this.AdditionalAttributes @bind:get="Value" @bind:set=this.OnChange>
+    @if (Value is null)
+    {
+        <option value="" disabled selected> -- Select an Item -- </option>
+    }
+    @foreach (var item in this.ItemsProvider)
+    {
+        <option value="@GetItemValue(item)">@GetItemText(item)</option>
+    }
+</select>
+
+@code {
+    [Parameter] public TValue? Value { get; set; }
+    [Parameter] public EventCallback<TValue> ValueChanged { get; set; }
+    [Parameter, EditorRequired] public Func<TItem, object>? TextProvider { get; set; }
+    [Parameter, EditorRequired] public Func<TItem, object>? ValueProvider { get; set; }
+    [Parameter, EditorRequired] public IEnumerable<TItem> ItemsProvider { get; set; } = Enumerable.Empty<TItem>();
+    [Parameter(CaptureUnmatchedValues = true)] public IReadOnlyDictionary<string, object>? AdditionalAttributes { get; set; }
+
+    private async Task OnChange(TValue value)
+    => await ValueChanged.InvokeAsync(value);
+
+    private string? GetItemValue(TItem item)
+        => ValueProvider is not null ? ValueProvider(item)?.ToString() : throw new ArgumentNullException(nameof(ValueProvider));
+
+    private string? GetItemText(TItem item)
+        => TextProvider is not null ? TextProvider(item).ToString() : throw new ArgumentNullException(nameof(TextProvider));
+}
