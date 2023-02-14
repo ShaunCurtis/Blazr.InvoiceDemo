@@ -10,4 +10,6 @@ public sealed record ItemQueryRequest
     public required Guid Uid { get; init; }
     public CancellationToken Cancellation { get; set; } = new();
 
+    public static ItemQueryRequest Create(Guid uid)
+    => new ItemQueryRequest() { Uid = uid };
 }

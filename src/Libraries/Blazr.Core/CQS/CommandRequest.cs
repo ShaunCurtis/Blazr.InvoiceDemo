@@ -9,4 +9,7 @@ public sealed record CommandRequest<TRecord>
 {
     public required TRecord Item { get; init; }
     public CancellationToken Cancellation { get; set; } = new();
+
+    public static CommandRequest<TRecord> Create(TRecord record)
+        => new CommandRequest<TRecord>() { Item= record };
 }
