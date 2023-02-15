@@ -8,15 +8,25 @@ namespace Blazr.App.Core;
 
 public sealed class InvoiceManager : IGuidIdentity
 {
+    private readonly List<InvoiceItem> _invoiceItems = new();
+    private readonly List<InvoiceItem> _newInvoiceItems = new();
+    private readonly List<InvoiceItem> _deletedInvoiceItems = new();
+    private IDataBroker _broker;
+    private ILogger<InvoiceManager> _logger;
+
     public Guid Uid { get; init; } = Guid.NewGuid();
 
     public Invoice Invoice { get; private set; } = new Invoice();
 
-    public IEnumerable<InvoiceItem> InvoiceItems => _invoiceItems;
-
-    private List<InvoiceItem> _invoiceItems { get; set; } = new();
-    private IDataBroker _broker;
-    private ILogger<InvoiceManager> _logger;
+    public IEnumerable<InvoiceItem> InvoiceItems
+    {
+        get
+        {
+            var list = _invoiceItems.ToList();
+            list.AddRange(_newInvoiceItems);
+            return list;
+        }
+    }
 
     public InvoiceManager(IDataBroker dataBroker, ILogger<InvoiceManager> logger)
     {
@@ -25,22 +35,31 @@ public sealed class InvoiceManager : IGuidIdentity
     }
 
     public async ValueTask LoadAsync(Guid uid)
+        => await LoadInvoiceAsync(uid);
+
+    private async ValueTask LoadInvoiceAsync(Guid uid)
     {
         var result = await _broker.GetItemAsync<Invoice>(ItemQueryRequest.Create(uid));
         this.Invoice = result.Item ?? new();
 
+        this.ClearInvoiceItems();
+
         var filters = new List<FilterDefinition> { new FilterDefinition { FilterName = ApplicationConstants.ByInvoiceUid, FilterData = uid.ToString(), } };
-        var query = new ListQueryRequest() { Filters=filters };
+        var query = new ListQueryRequest() { Filters = filters };
         var listResult = await _broker.GetItemsAsync<InvoiceItem>(query);
+        if (listResult.Successful)
+            _invoiceItems.AddRange(listResult.Items);
     }
 
-    public void Load(Invoice invoice, List<InvoiceItem> invoiceItems)
+
+    private void ClearInvoiceItems()
     {
-        Invoice = invoice;
-        _invoiceItems = invoiceItems;
+        _invoiceItems.Clear();
+        _deletedInvoiceItems.Clear();
+        _newInvoiceItems.Clear();
     }
 
-    public async ValueTask<bool> DeleteInvoice()
+    private async ValueTask<bool> DeleteInvoiceFromStorage()
     {
         bool errorTrip = false;
 
@@ -63,7 +82,7 @@ public sealed class InvoiceManager : IGuidIdentity
         return !errorTrip;
     }
 
-    public async ValueTask<bool> SaveInvoice()
+    private async ValueTask<bool> SaveInvoiceToStorage()
     {
         bool errorTrip = false;
 
