@@ -3,7 +3,6 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
 namespace Blazr.App.Core;
 
 public sealed class InvoiceManager : IGuidIdentity
@@ -37,6 +36,44 @@ public sealed class InvoiceManager : IGuidIdentity
     public async ValueTask LoadAsync(Guid uid)
         => await LoadInvoiceAsync(uid);
 
+    public bool AddInvoiceItem(InvoiceItem item)
+    {
+        if (this.InvoiceItemExists(item.Uid))
+            return false;
+
+        _newInvoiceItems.Add(item);
+        return true;
+    }
+
+    public bool UpdateInvoiceItem(InvoiceItem item)
+    {
+        if (!this.TryGetInvoiceItem(item.Uid, out InvoiceItem? existingItem))
+            return false;
+
+        if (_newInvoiceItems.Remove(existingItem))
+        {
+            _newInvoiceItems.Add(item);
+            return true;
+        }
+
+        if (_invoiceItems.Remove(existingItem))
+        {
+            _invoiceItems.Add(item);
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool InvoiceItemExists(Guid uid)
+        => this.InvoiceItems.Any(item => item.Uid.Equals(uid));
+
+    private bool TryGetInvoiceItem(Guid uid, [NotNullWhen(true)] out InvoiceItem? item)
+    {
+        item = this.InvoiceItems.FirstOrDefault(item => item.Uid.Equals(uid));
+        return item != null;
+    }
+
     private async ValueTask LoadInvoiceAsync(Guid uid)
     {
         var result = await _broker.GetItemAsync<Invoice>(ItemQueryRequest.Create(uid));
@@ -50,7 +87,6 @@ public sealed class InvoiceManager : IGuidIdentity
         if (listResult.Successful)
             _invoiceItems.AddRange(listResult.Items);
     }
-
 
     private void ClearInvoiceItems()
     {

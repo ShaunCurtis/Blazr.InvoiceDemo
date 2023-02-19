@@ -22,7 +22,6 @@ public sealed class ListRequestAPIHandler
         var entityname = (new TRecord()).GetType().Name;
 
         var httpClient = _factory.CreateClient();
-        //TODO - security
         var response = await httpClient.PostAsJsonAsync<ListQueryRequest>($"/api/{entityname}/listquery", request, request.Cancellation);
 
         if (response.IsSuccessStatusCode)
