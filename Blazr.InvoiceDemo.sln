@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.App.WASM", "src\EndPo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.WASM.Server", "src\EndPoints\Blazr.WASM.Server\Blazr.WASM.Server.csproj", "{A9FB8682-6551-4875-BFCE-AAC04CF38319}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5D2374A7-2B16-4706-8AA3-6FF44C181DC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.App.Tests", "Tests\Blazr.App.Tests\Blazr.App.Tests.csproj", "{3331A984-20F4-40A5-997E-1755EE394355}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,10 @@ Global
 		{A9FB8682-6551-4875-BFCE-AAC04CF38319}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A9FB8682-6551-4875-BFCE-AAC04CF38319}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A9FB8682-6551-4875-BFCE-AAC04CF38319}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3331A984-20F4-40A5-997E-1755EE394355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3331A984-20F4-40A5-997E-1755EE394355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3331A984-20F4-40A5-997E-1755EE394355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3331A984-20F4-40A5-997E-1755EE394355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +110,7 @@ Global
 		{D2448643-8760-41CF-AF7C-EFB8CCA199D6} = {D0A40704-B30B-4DB5-AA42-2499C3829918}
 		{4FD0EA6A-FDAF-4CA1-B566-427D8443CE91} = {4A867D5E-BEAB-4E0E-B2DB-4200D26337CA}
 		{A9FB8682-6551-4875-BFCE-AAC04CF38319} = {4A867D5E-BEAB-4E0E-B2DB-4200D26337CA}
+		{3331A984-20F4-40A5-997E-1755EE394355} = {5D2374A7-2B16-4706-8AA3-6FF44C181DC5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3620239B-C0AB-4302-9613-F88725E8655E}

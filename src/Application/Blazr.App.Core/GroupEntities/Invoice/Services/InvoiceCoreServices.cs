@@ -21,6 +21,7 @@ public static class InvoiceCoreServices
         services.AddTransient<IRecordFilter<Invoice>, InvoiceFilter>();
         services.AddTransient<ListController<Invoice>>();
         services.AddTransient<ListController<InvoiceView>>();
+        services.AddTransient<InvoiceDataPresenter>();
     }
 
 }

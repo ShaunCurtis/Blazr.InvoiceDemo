@@ -36,12 +36,15 @@ public static class ApplicationServices
     {
         services.AddDbContextFactory<TDbContext>(options);
         services.AddScoped<IDataBroker, RepositoryDataBroker>();
+        services.AddScoped<ICustomDataBroker, CustomDataBroker>();
 
         services.AddScoped<IListRequestHandler, ListRequestHandler<InMemoryInvoiceDbContext>>();
         services.AddScoped<IItemRequestHandler, ItemRequestHandler<InMemoryInvoiceDbContext>>();
         services.AddScoped<IUpdateRequestHandler, UpdateRequestHandler<InMemoryInvoiceDbContext>>();
         services.AddScoped<ICreateRequestHandler, CreateRequestHandler<InMemoryInvoiceDbContext>>();
         services.AddScoped<IDeleteRequestHandler, DeleteRequestHandler<InMemoryInvoiceDbContext>>();
+
+        services.AddInvoiceServerInfrastructureServices();
     }
 
     private static void AddAppWASMInfraStructureServices(this IServiceCollection services)

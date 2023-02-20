@@ -173,6 +173,12 @@ public sealed class InvoiceTestDataProvider
 
     private static InvoiceTestDataProvider? _provider;
 
+    public InvoiceItem GetNewInvoiceItem(Guid invoiceUid )
+    {
+            var product = _products![Random.Shared.Next(_products.Count())];
+            return new() { InvoiceUid = invoiceUid, ProductUid = product.Uid, ItemQuantity = Random.Shared.Next(4), ItemUnitPrice = product.ProductUnitPrice };
+    }
+
     public static InvoiceTestDataProvider Instance()
     {
         if (_provider is null)

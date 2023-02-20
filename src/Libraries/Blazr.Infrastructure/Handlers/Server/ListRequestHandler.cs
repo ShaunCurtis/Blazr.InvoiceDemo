@@ -45,8 +45,6 @@ public sealed class ListRequestHandler<TDbContext> : IListRequestHandler
             ? await query.CountAsync(request.Cancellation)
             : query.Count();
 
-        count = await query.CountAsync();
-
         if (sorterProvider is not null)
             query = sorterProvider.AddSortToQuery(request.SortField, query, request.SortDescending);
 
