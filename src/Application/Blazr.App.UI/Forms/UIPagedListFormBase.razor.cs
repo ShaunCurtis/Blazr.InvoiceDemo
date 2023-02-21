@@ -31,9 +31,10 @@ public partial class UIPagedListFormBase<TRecord, TEntityService> : UIWrapperBas
             // Gets an instance of the Presenter from the Service Provider
             this.Presenter = ServiceProvider.GetComponentService<IListPresenter<TRecord, TEntityService>>() ?? default!;
 
-            if (this.Presenter is null)
-                throw new NullReferenceException($"No Presenter cound be created.");
+            // Ensure we have  Presenter
+            ArgumentNullException.ThrowIfNull(nameof(this.Presenter));
 
+            // assign the Presenter if it impleements IDisposable
             _disposable = this.Presenter as IDisposable;
             Presenter.StateId = this.StateId;
         }

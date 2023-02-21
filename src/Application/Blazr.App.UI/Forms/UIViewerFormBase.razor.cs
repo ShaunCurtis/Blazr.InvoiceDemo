@@ -22,9 +22,7 @@ public abstract partial class UIViewerFormBase<TRecord, TEntityService> : UIWrap
     {
         parameters.SetParameterProperties(this);
         if (!initialized)
-        {
             await this.Presenter.LoadAsync(Uid);
-        }
 
         await base.SetParametersAsync(ParameterView.Empty);
     }

@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <!--<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\Blazr.Core\Blazr.Core.csproj" />
+    <ProjectReference Include="..\..\Libraries\Blazr.UI\Blazr.UI.csproj" />
+    <ProjectReference Include="..\Blazr.App.Core\Blazr.App.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="GroupEntities\InvoiceItem\Routes\" />
+    <Folder Include="GroupEntities\Product\Components\" />
+    <Folder Include="GroupEntities\Invoice\Components\" />
+    <Folder Include="GroupEntities\Invoice\Routes\" />
+    <Folder Include="GroupEntities\Product\Routes\" />
+    <Folder Include="GroupEntities\Customer\Components\" />
+    <Folder Include="GroupEntities\Customer\Routes\" />
+  </ItemGroup>
+
+</Project>

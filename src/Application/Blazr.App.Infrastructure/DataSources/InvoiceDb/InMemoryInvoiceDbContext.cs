@@ -10,6 +10,7 @@ public sealed class InMemoryInvoiceDbContext
 {
     public DbSet<User> User { get; set; } = default!;
     public DbSet<Customer> Customer { get; set; } = default!;
+    public DbSet<DboCustomer> DboCustomer { get; set; } = default!;
     public DbSet<Product> Product { get; set; } = default!;
     public DbSet<Invoice> Invoice { get; set; } = default!;
     public DbSet<InvoiceItem> InvoiceItem { get; set; } = default!;
@@ -23,10 +24,19 @@ public sealed class InMemoryInvoiceDbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().ToTable("User");
-        modelBuilder.Entity<Customer>().ToTable("Customer");
+        modelBuilder.Entity<DboCustomer>().ToTable("Customer");
         modelBuilder.Entity<Product>().ToTable("Product");
         modelBuilder.Entity<Invoice>().ToTable("Invoice");
         modelBuilder.Entity<InvoiceItem>().ToTable("InvoiceItem");
+
+        modelBuilder.Entity<Customer>()
+            .ToInMemoryQuery(()
+                => from c in this.DboCustomer
+                   select new Customer
+                   {
+                       Uid = c.Uid,
+                       CustomerName = c.CustomerName,
+                   }).HasKey(c => c.Uid);
 
         modelBuilder.Entity<InvoiceView>()
             .ToInMemoryQuery(()

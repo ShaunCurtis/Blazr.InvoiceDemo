@@ -40,13 +40,16 @@ public sealed class InvoiceTestDataProvider
             dbContext.SaveChanges();
         }
 
-        var customers = dbContext.Set<Customer>();
+        var customers = dbContext.Set<DboCustomer>();
 
         // Check if we already have a full data set
         // If not clear down any existing data and start again
         if (customers.Count() == 0)
         {
-            dbContext.AddRange(this.Customers);
+            foreach (var customer in this.Customers)
+            {
+                dbContext.Add(customer.MapToDbo());
+            }
             dbContext.SaveChanges();
         }
 

@@ -1,17 +1,17 @@
 # Group Entities And Notification
 
-Data and objects in the solution are divided into *GroupEntities*.  You will see this in the folder structure.  A *Group Entity* is a collection of objects that belong to a common entity.  For example the Core domain `WeatherForecast` group entity contains all the data classes and services associated with a Weather Forecast.
+Data and objects in the solution are grouped into *GroupEntities*: you will see these in the folder structure.  A *Group Entity* is a collection of related objects.  For example the Core domain `Invoice` group entity contains all the data classes and services associated with Invoicing.
 
-Each Group Entity has a `IEntityService` class that is used to identify it.
+Each Group Entity has a `IEntityService`.  This class is used as a group identity in defining services.
 
 ```csharp
 public interface IEntityService { }
 ```
 
-The Weather Forecast concrete implementation.
+The Invoice concrete implementation.
 
 ```csharp
-public class WeatherForecastEntityService : IEntityService {}
+public class InvoiceEntityService : IEntityService {}
 ```
 
 Why do we need these?  They don't do anything.
@@ -48,13 +48,21 @@ public class NotificationService<TEntityService> : INotificationService<TEntityS
 }
 ```
 
-We can now define a Notification Service for each Group Entity like this:
+We can define a Notification Service for each Group Entity like this:
 
 ```csharp
-services.AddScoped<INotificationService<WeatherForecastEntityService>, NotificationService<WeatherForecastEntityService>>();
+services.AddScoped<INotificationService<InvoiceEntityService>, NotificationService<InvoiceEntityService>>();
 ```
 
 No concrete class defined.  The edit presenter injects the instance defined in DI and calls `NotifyRecordChanged` to raise the `RecordChanged` event.  The list presenter injects the same notification instance and registers a handler on the `RecordChanged` event.  It does whatever it needs to do and calls `NotifyListChanged`....
+
+Here are the service definitions for the List and Edit presenters,
+
+```csharp
+services.AddScoped<IListPresenter<Invoice, InvoiceEntityService>, ListPresenter<Invoice, InvoiceEntityService>>();
+services.AddTransient<IEditPresenter<Invoice, InvoiceEditContext>, EditPresenter<Invoice, InvoiceEntityService, InvoiceEditContext>>();
+
+```
 
 
 

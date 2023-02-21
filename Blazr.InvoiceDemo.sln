@@ -30,9 +30,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{00683F0C-D177-4740-9487-42074CB347C8}"
 	ProjectSection(SolutionItems) = preProject
-		BlazrGrid.md = BlazrGrid.md
-		GroupEntities.md = GroupEntities.md
-		Lists.md = Lists.md
+		Notes\BlazrGrid.md = Notes\BlazrGrid.md
+		Notes\GroupEntities.md = Notes\GroupEntities.md
+		Notes\List-Controller.md = Notes\List-Controller.md
+		Notes\List-Form.md = Notes\List-Form.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazr.App.Controllers", "src\Application\Blazr.App.Controllers\Blazr.App.Controllers.csproj", "{D2448643-8760-41CF-AF7C-EFB8CCA199D6}"

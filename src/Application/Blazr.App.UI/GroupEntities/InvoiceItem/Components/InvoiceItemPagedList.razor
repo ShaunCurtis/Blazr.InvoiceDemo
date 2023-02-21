@@ -1,0 +1,26 @@
+﻿@namespace Blazr.App.UI
+@inherits UIPagedListFormBase<InvoiceItem, InvoiceEntityService>
+
+@*<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants." IsNoWrap=true Title="Invoice No">
+    @context.
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="InvoiceView" IsMaxColumn=true SortField="@ApplicationConstants.CustomerName" IsNoWrap=true Title="Customer">
+    @context.CustomerName
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="InvoiceView" SortField="@ApplicationConstants.InvoiceDate" IsNoWrap=true Title="Date">
+    @context.InvoiceDate.AsGlobalDate()
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="InvoiceView" SortField="@ApplicationConstants.InvoicePrice" class="text-end pe-2" IsNoWrap=true Title="Total">
+    @context.InvoicePrice.AsSterling()
+</BlazrSortedGridColumn>
+
+<BlazrGridColumn TGridItem="InvoiceView" Title="Actions" IsNoWrap=true Class="text-end">
+    <UIButtonGroup>
+        <button class="btn btn-sm btn-secondary" @onclick="() => OnViewAsync(context)">View</button>
+        <button class="btn btn-sm btn-primary" @onclick="() => OnEditAsync(context)">Edit</button>
+    </UIButtonGroup>
+</BlazrGridColumn>
+*@

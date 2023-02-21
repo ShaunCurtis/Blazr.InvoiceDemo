@@ -8,17 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Blazr.App.Core;
 
-public sealed record Invoice : IGuidIdentity
+public sealed record DboCustomer : IGuidIdentity
 {
     [Key] public Guid Uid { get; init; } = Guid.Empty;
 
-    public Guid CustomerUid { get; init; } = Guid.Empty;
-
     public string CustomerName { get; init; } = "Not Set";
-
-    public DateOnly InvoiceDate { get; init; } = DateOnly.FromDateTime(DateTime.MinValue);
-
-    public string InvoiceNumber { get; init; } = "Not Set";
-
-    public decimal InvoicePrice { get; init; }
 }
