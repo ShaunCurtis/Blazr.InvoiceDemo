@@ -22,7 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="GroupEntities\InvoiceItem\Components\" />
     <Folder Include="GroupEntities\InvoiceItem\Routes\" />
     <Folder Include="GroupEntities\Product\Components\" />
     <Folder Include="GroupEntities\Invoice\Components\" />
