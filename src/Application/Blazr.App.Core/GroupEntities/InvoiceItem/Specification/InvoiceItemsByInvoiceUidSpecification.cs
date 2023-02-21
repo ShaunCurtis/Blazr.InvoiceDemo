@@ -18,3 +18,16 @@ public class InvoiceItemsByInvoiceUidSpecification : PredicateSpecification<Invo
     public override Expression<Func<InvoiceItem, bool>> Expression
         => item => item.InvoiceUid == _invoiceUid;
 }
+public class InvoiceItemViewsByInvoiceUidSpecification : PredicateSpecification<InvoiceItemView>
+{
+    private readonly Guid _invoiceUid;
+
+    public InvoiceItemViewsByInvoiceUidSpecification(Guid uid)
+        => _invoiceUid = uid;
+
+    public InvoiceItemViewsByInvoiceUidSpecification(FilterDefinition filter)
+        => Guid.TryParse(filter.FilterData, out _invoiceUid);
+
+    public override Expression<Func<InvoiceItemView, bool>> Expression
+        => item => item.InvoiceUid == _invoiceUid;
+}

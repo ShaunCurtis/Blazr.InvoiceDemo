@@ -30,7 +30,7 @@ public sealed class InvoiceDataItemHandler : IItemRequestHandler<InvoiceData>
         // Get the items assocaited with the invoice
         var filters = new List<FilterDefinition> { new FilterDefinition { FilterName = ApplicationConstants.ByInvoiceUid, FilterData = request.Uid.ToString(), } };
         var query = new ListQueryRequest() { Filters = filters };
-        var listResult = await _broker.GetItemsAsync<InvoiceItem>(query);
+        var listResult = await _broker.GetItemsAsync<InvoiceItemView>(query);
 
         if (listResult.Successful)
             return ItemQueryResult<InvoiceData>.Success(new(invoice, listResult.Items));

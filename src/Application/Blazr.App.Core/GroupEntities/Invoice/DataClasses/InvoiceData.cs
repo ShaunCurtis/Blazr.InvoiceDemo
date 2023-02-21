@@ -8,10 +8,10 @@ namespace Blazr.App.Core;
 public sealed class InvoiceData : IGuidIdentity
 {
     private Invoice _baseInvoice { get; set; } = new Invoice();
-    private readonly List<InvoiceItem> _baseInvoiceItems = new();
-    private readonly List<InvoiceItem> _invoiceItems = new();
-    private readonly List<InvoiceItem> _newInvoiceItems = new();
-    private readonly List<InvoiceItem> _deletedInvoiceItems = new();
+    private readonly List<InvoiceItemView> _baseInvoiceItems = new();
+    private readonly List<InvoiceItemView> _invoiceItems = new();
+    private readonly List<InvoiceItemView> _newInvoiceItems = new();
+    private readonly List<InvoiceItemView> _deletedInvoiceItems = new();
 
     public Guid Uid { get; init; } = Guid.NewGuid();
 
@@ -20,7 +20,7 @@ public sealed class InvoiceData : IGuidIdentity
     public bool IsNewInvoice { get; private set; }
     public bool InvoiceIsDirty => this.Invoice.Equals(_baseInvoice);
 
-    public IEnumerable<InvoiceItem> InvoiceItems
+    public IEnumerable<InvoiceItemView> InvoiceItems
     {
         get
         {
@@ -30,11 +30,11 @@ public sealed class InvoiceData : IGuidIdentity
         }
     }
 
-    public IEnumerable<InvoiceItem> UpdatedItems
+    public IEnumerable<InvoiceItemView> UpdatedItems
     {
         get
         {
-            var list = new List<InvoiceItem>();
+            var list = new List<InvoiceItemView>();
 
             foreach (var item in _invoiceItems)
             {
@@ -45,16 +45,16 @@ public sealed class InvoiceData : IGuidIdentity
         }
     }
 
-    public IEnumerable<InvoiceItem> DeletedItems
+    public IEnumerable<InvoiceItemView> DeletedItems
         => _deletedInvoiceItems.ToList();
 
-    public IEnumerable<InvoiceItem> AddedItems
+    public IEnumerable<InvoiceItemView> AddedItems
         => _newInvoiceItems.ToList();
 
     public InvoiceData()
         => this.IsNewInvoice = true;
 
-    public InvoiceData(Invoice? invoice, IEnumerable<InvoiceItem>? items)
+    public InvoiceData(Invoice? invoice, IEnumerable<InvoiceItemView>? items)
     {
         this.IsNewInvoice = invoice is null;
 
@@ -65,16 +65,16 @@ public sealed class InvoiceData : IGuidIdentity
             _invoiceItems.AddRange(items);
     }
 
-    public bool AddInvoiceItem(InvoiceItem item)
+    public bool AddInvoiceItem(InvoiceItemView item)
         => this.addInvoiceItem(item);
 
-    public bool RemoveInvoiceItem(InvoiceItem item)
+    public bool RemoveInvoiceItem(InvoiceItemView item)
         => this.removeInvoiceItem(item);
 
-    public bool UpdateInvoiceItem(InvoiceItem item)
+    public bool UpdateInvoiceItem(InvoiceItemView item)
         => this.updateInvoiceItem(item);
 
-    private bool removeInvoiceItem(InvoiceItem item)
+    private bool removeInvoiceItem(InvoiceItemView item)
     {
         if (_invoiceItems.Remove(item) || _newInvoiceItems.Remove(item))
         {
@@ -85,7 +85,7 @@ public sealed class InvoiceData : IGuidIdentity
         return false;
     }
 
-    private bool addInvoiceItem(InvoiceItem item)
+    private bool addInvoiceItem(InvoiceItemView item)
     {
         if (this.InvoiceItemExists(item.Uid))
             return false;
@@ -94,9 +94,9 @@ public sealed class InvoiceData : IGuidIdentity
         return true;
     }
 
-    private bool updateInvoiceItem(InvoiceItem item)
+    private bool updateInvoiceItem(InvoiceItemView item)
     {
-        if (!this.TryGetInvoiceItem(item.Uid, out InvoiceItem? existingItem))
+        if (!this.TryGetInvoiceItem(item.Uid, out InvoiceItemView? existingItem))
             return false;
 
         if (_newInvoiceItems.Remove(existingItem))
@@ -117,7 +117,7 @@ public sealed class InvoiceData : IGuidIdentity
     private bool InvoiceItemExists(Guid uid)
         => this.InvoiceItems.Any(item => item.Uid.Equals(uid));
 
-    private bool TryGetInvoiceItem(Guid uid, [NotNullWhen(true)] out InvoiceItem? item)
+    private bool TryGetInvoiceItem(Guid uid, [NotNullWhen(true)] out InvoiceItemView? item)
     {
         item = this.InvoiceItems.FirstOrDefault(item => item.Uid.Equals(uid));
         return item != null;
