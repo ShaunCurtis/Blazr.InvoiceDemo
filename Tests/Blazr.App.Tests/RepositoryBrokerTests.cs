@@ -39,7 +39,7 @@ public class RepositoryBrokerTests
 
         var cancelToken = new CancellationToken();
         var listRequest = new ListQueryRequest { StartIndex = 0, PageSize = 1000, Cancellation = cancelToken };
-        var result = await broker!.GetItemsAsync<Invoice>(listRequest);
+        var result = await broker!.GetItemsAsync<InvoiceView>(listRequest);
 
         Assert.Equal(3, result.Items.Count());
     }
@@ -50,7 +50,7 @@ public class RepositoryBrokerTests
         var provider = GetServiceProvider();
         var broker = provider.GetService<IDataBroker>()!;
 
-        var testUid = _testDataProvider.Invoices.First().Uid;
+        var testUid = _testDataProvider.TestInvoiceUid;
 
         var presenter = provider.GetService<InvoiceDataPresenter>()!;
 
@@ -71,7 +71,7 @@ public class RepositoryBrokerTests
         var provider = GetServiceProvider();
         var broker = provider.GetService<IDataBroker>()!;
 
-        var testUid = _testDataProvider.Invoices.First().Uid;
+        var testUid = _testDataProvider.TestInvoiceUid;
 
         var presenter = provider.GetService<InvoiceDataPresenter>()!;
 
@@ -106,7 +106,7 @@ public class RepositoryBrokerTests
         var broker = provider.GetService<IDataBroker>()!;
 
         // Get the first Invoice from the test provider
-        var testUid = _testDataProvider.Invoices.First().Uid;
+        var testUid = _testDataProvider.TestInvoiceUid;
 
         // Get a ViewManager instance and load it
         var presenter = provider.GetService<InvoiceDataPresenter>()!;

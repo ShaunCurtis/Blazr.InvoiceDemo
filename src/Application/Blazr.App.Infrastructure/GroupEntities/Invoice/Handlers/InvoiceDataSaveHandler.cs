@@ -25,7 +25,7 @@ public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
         // Create the invoice if it's new
         if (invoiceData.IsNewInvoice)
         {
-            var result = await _broker.CreateItemAsync<Invoice>(CommandRequest<Invoice>.Create(invoiceData.Invoice.ToInvoice()));
+            var result = await _broker.CreateItemAsync<DboInvoice>(CommandRequest<DboInvoice>.Create(invoiceData.Invoice.ToDboInvoice()));
             if (!result.Successful)
                 _logger.LogError($"Invoice - {invoiceData.Invoice.Uid} - {result.Message}");
 
@@ -35,7 +35,7 @@ public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
         // Update the invoice if it is dirty)
         if (!invoiceData.IsNewInvoice && invoiceData.InvoiceIsDirty)
         {
-            var result = await _broker.UpdateItemAsync<Invoice>(CommandRequest<Invoice>.Create(invoiceData.Invoice.ToInvoice()));
+            var result = await _broker.UpdateItemAsync<DboInvoice>(CommandRequest<DboInvoice>.Create(invoiceData.Invoice.ToDboInvoice()));
             if (!result.Successful)
                 _logger.LogError($"Invoice - {invoiceData.Invoice.Uid} - {result.Message}");
 

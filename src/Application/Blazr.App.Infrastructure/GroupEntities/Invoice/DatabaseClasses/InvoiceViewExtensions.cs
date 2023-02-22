@@ -4,18 +4,17 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-namespace Blazr.App.Core;
+namespace Blazr.App.Infrastructure;
 
-public static class InvoiceViewExtensions
+internal static class InvoiceViewExtensions
 {
-    public static Invoice ToInvoice(this InvoiceView item)
+    internal static DboInvoice ToDboInvoice(this InvoiceView item)
         => new()
         {
             Uid = item.Uid,
             InvoiceDate= item.InvoiceDate,
             InvoiceNumber= item.InvoiceNumber,
             InvoicePrice= item.InvoicePrice,
-            CustomerName= item.CustomerName,
             CustomerUid= item.CustomerUid,
         };
 }

@@ -3,7 +3,7 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-namespace Blazr.Infrastructure;
+namespace Blazr.App.Infrastructure;
 
 public sealed class InMemoryInvoiceDbContext
     : DbContext
@@ -11,12 +11,13 @@ public sealed class InMemoryInvoiceDbContext
     public DbSet<User> User { get; set; } = default!;
     public DbSet<Customer> Customer { get; set; } = default!;
     public DbSet<Product> Product { get; set; } = default!;
-    public DbSet<Invoice> Invoice { get; set; } = default!;
-    public DbSet<InvoiceItem> InvoiceItem { get; set; } = default!;
     public DbSet<InvoiceView> InvoiceView { get; set; } = default!;
     public DbSet<InvoiceItemView> InvoiceItemView { get; set; } = default!;
     public DbSet<CustomerFkItem> CustomerFK { get; set; }
     public DbSet<ProductFkItem> ProductFK { get; set; }
+
+    internal DbSet<DboInvoice> DboInvoice { get; set; } = default!;
+    internal DbSet<DboInvoiceItem> DboInvoiceItem { get; set; } = default!;
 
     public InMemoryInvoiceDbContext(DbContextOptions<InMemoryInvoiceDbContext> options) : base(options) { }
 
@@ -30,7 +31,7 @@ public sealed class InMemoryInvoiceDbContext
 
         modelBuilder.Entity<InvoiceView>()
             .ToInMemoryQuery(()
-                => from i in this.Invoice
+                => from i in this.DboInvoice
                    join c in this.Customer! on i.CustomerUid equals c.Uid
                    select new InvoiceView
                    {
@@ -44,9 +45,9 @@ public sealed class InMemoryInvoiceDbContext
 
         modelBuilder.Entity<InvoiceItemView>()
             .ToInMemoryQuery(()
-                => from i in this.InvoiceItem
+                => from i in this.DboInvoiceItem
                    join p in this.Product! on i.ProductUid equals p.Uid
-                   join iv in this.Invoice! on i.InvoiceUid equals iv.Uid 
+                   join iv in this.DboInvoice! on i.InvoiceUid equals iv.Uid 
                    select new InvoiceItemView
                    {
                        Uid = i.Uid,

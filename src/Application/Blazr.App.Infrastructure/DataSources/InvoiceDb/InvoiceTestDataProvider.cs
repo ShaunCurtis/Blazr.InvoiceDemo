@@ -13,16 +13,15 @@ public sealed class InvoiceTestDataProvider
     public IEnumerable<User> Users => _users ?? Enumerable.Empty<User>();
     public IEnumerable<Product> Products => _products ?? Enumerable.Empty<Product>();
     public IEnumerable<Customer> Customers => _customers ?? Enumerable.Empty<Customer>();
-    public IEnumerable<DboInvoice> Invoices => _invoices ?? Enumerable.Empty<Invoice>();
-    public IEnumerable<InvoiceItem> InvoiceItems => _invoiceItems ?? Enumerable.Empty<InvoiceItem>();
+    internal IEnumerable<DboInvoice> Invoices => _invoices ?? Enumerable.Empty<DboInvoice>();
+    internal IEnumerable<DboInvoiceItem> InvoiceItems => _invoiceItems ?? Enumerable.Empty<DboInvoiceItem>();
 
     private List<Product>? _products;
     private List<Customer>? _customers;
-    private List<Invoice>? _invoices;
-    private List<InvoiceItem>? _invoiceItems;
+    private List<DboInvoice>? _invoices;
+    private List<DboInvoiceItem>? _invoiceItems;
     private List<User>? _users;
 
-    //878e0a17-97d1-46db-a80c-bb12e467c50c
     private InvoiceTestDataProvider()
         => this.Load();
 
@@ -50,7 +49,7 @@ public sealed class InvoiceTestDataProvider
             dbContext.SaveChanges();
         }
 
-        var invoices = dbContext.Set<Invoice>();
+        var invoices = dbContext.Set<DboInvoice>();
 
         // Check if we already have a full data set
         // If not clear down any existing data and start again
@@ -60,7 +59,7 @@ public sealed class InvoiceTestDataProvider
             dbContext.SaveChanges();
         }
 
-        var invoiceItems = dbContext.Set<InvoiceItem>();
+        var invoiceItems = dbContext.Set<DboInvoiceItem>();
 
         // Check if we already have a full data set
         // If not clear down any existing data and start again
@@ -159,7 +158,7 @@ public sealed class InvoiceTestDataProvider
 
     private void LoadInvoiceItems()
     {
-        var invoiceItems = new List<InvoiceItem>();
+        var invoiceItems = new List<DboInvoiceItem>();
 
         foreach (var invoice in this.Invoices)
         {
@@ -187,6 +186,9 @@ public sealed class InvoiceTestDataProvider
                 ItemUnitPrice = product.ProductUnitPrice 
             };
     }
+
+    public Guid TestInvoiceUid
+        => _invoices?.First().Uid ?? Guid.Empty;
 
     public static InvoiceTestDataProvider Instance()
     {

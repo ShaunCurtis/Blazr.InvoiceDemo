@@ -31,7 +31,7 @@ public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceData
         }
 
         {
-            var result = await _broker.DeleteItemAsync<Invoice>(CommandRequest<Invoice>.Create(request.Item.Invoice.ToInvoice()));
+            var result = await _broker.DeleteItemAsync<DboInvoice>(CommandRequest<DboInvoice>.Create(request.Item.Invoice.ToDboInvoice()));
             if (!result.Successful)
                 _logger.LogError($"InvoiceItem - {request.Item.Invoice.Uid} - {result.Message}");
 
