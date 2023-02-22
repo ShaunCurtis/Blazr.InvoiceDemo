@@ -13,7 +13,7 @@ public sealed class InvoiceTestDataProvider
     public IEnumerable<User> Users => _users ?? Enumerable.Empty<User>();
     public IEnumerable<Product> Products => _products ?? Enumerable.Empty<Product>();
     public IEnumerable<Customer> Customers => _customers ?? Enumerable.Empty<Customer>();
-    public IEnumerable<Invoice> Invoices => _invoices ?? Enumerable.Empty<Invoice>();
+    public IEnumerable<DboInvoice> Invoices => _invoices ?? Enumerable.Empty<Invoice>();
     public IEnumerable<InvoiceItem> InvoiceItems => _invoiceItems ?? Enumerable.Empty<InvoiceItem>();
 
     private List<Product>? _products;
@@ -148,7 +148,7 @@ public sealed class InvoiceTestDataProvider
 
     private void LoadInvoices()
     {
-        var invoices = new List<Invoice>()
+        var invoices = new List<DboInvoice>()
         {
             new() { Uid=Guid.NewGuid(), CustomerUid = _customers![Random.Shared.Next(Customers.Count())].Uid, InvoiceDate = DateOnly.FromDateTime(DateTime.Now), InvoiceNumber="1001", InvoicePrice=1000m},
             new() { Uid=Guid.NewGuid(), CustomerUid = _customers![Random.Shared.Next(Customers.Count())].Uid, InvoiceDate = DateOnly.FromDateTime(DateTime.Now), InvoiceNumber="1002", InvoicePrice=2000m},
@@ -173,10 +173,19 @@ public sealed class InvoiceTestDataProvider
 
     private static InvoiceTestDataProvider? _provider;
 
-    public InvoiceItem GetNewInvoiceItem(Guid invoiceUid )
+    public InvoiceItemView GetNewInvoiceItem(Guid invoiceUid )
     {
+        var invoice = _invoices!.First(item => item.Uid == invoiceUid);
             var product = _products![Random.Shared.Next(_products.Count())];
-            return new() { InvoiceUid = invoiceUid, ProductUid = product.Uid, ItemQuantity = Random.Shared.Next(4), ItemUnitPrice = product.ProductUnitPrice };
+            return new() { 
+                InvoiceUid = invoiceUid,
+                InvoiceNumber = invoice.InvoiceNumber,
+                ProductUid = product.Uid, 
+                ProductName= product.ProductName,
+                ProductCode= product.ProductCode,
+                ItemQuantity = Random.Shared.Next(4), 
+                ItemUnitPrice = product.ProductUnitPrice 
+            };
     }
 
     public static InvoiceTestDataProvider Instance()

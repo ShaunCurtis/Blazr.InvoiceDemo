@@ -66,6 +66,40 @@ public class RepositoryBrokerTests
     }
 
     [Fact]
+    public async void TestRepositoryDataBrokerInvoiceManagerUpdateItem()
+    {
+        var provider = GetServiceProvider();
+        var broker = provider.GetService<IDataBroker>()!;
+
+        var testUid = _testDataProvider.Invoices.First().Uid;
+
+        var presenter = provider.GetService<InvoiceDataPresenter>()!;
+
+        await presenter.LoadAsync(testUid);
+        var items = presenter.Item.InvoiceItems.Count();
+
+        // Get the item to edit and change it
+        var editItem = presenter.Item.InvoiceItems.First();
+        var testInvoiceItemUid = editItem.Uid;
+
+        // change it and update the invoice
+        var editedItem = editItem with { ItemQuantity=5 };
+        presenter.Item.UpdateInvoiceItem(editedItem);
+
+        // Save the changes to the database
+        await presenter.SaveAsync();
+
+        // Get a new InvoiceNManager instance and load it
+        var newPresenter = provider.GetService<InvoiceDataPresenter>()!;
+        await newPresenter.LoadAsync(testUid);
+
+        var updatedItem = newPresenter.Item.InvoiceItems.First(item => item.Uid.Equals(testInvoiceItemUid));
+
+        Assert.Equal(editedItem, updatedItem);
+        Assert.Equal(items, newPresenter.Item.InvoiceItems.Count());
+    }
+
+    [Fact]
     public async void TestRepositoryDataBrokerInvoiceManagerDeleteItem()
     {
         var provider = GetServiceProvider();

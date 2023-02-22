@@ -23,7 +23,7 @@ public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceData
 
         foreach (var item in request.Item.InvoiceItems)
         {
-            var result = await _broker.DeleteItemAsync<InvoiceItem>(CommandRequest<InvoiceItem>.Create(item));
+            var result = await _broker.DeleteItemAsync<InvoiceItem>(CommandRequest<InvoiceItem>.Create(item.ToInvoiceItem()));
             if (!result.Successful)
                 _logger.LogError($"InvoiceItem - {item.Uid} - {result.Message}");
 
@@ -31,7 +31,7 @@ public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceData
         }
 
         {
-            var result = await _broker.DeleteItemAsync<Invoice>(CommandRequest<Invoice>.Create(request.Item.Invoice));
+            var result = await _broker.DeleteItemAsync<Invoice>(CommandRequest<Invoice>.Create(request.Item.Invoice.ToInvoice()));
             if (!result.Successful)
                 _logger.LogError($"InvoiceItem - {request.Item.Invoice.Uid} - {result.Message}");
 

@@ -19,7 +19,7 @@ public sealed class InvoiceDataItemHandler : IItemRequestHandler<InvoiceData>
 
     public async ValueTask<ItemQueryResult<InvoiceData>> ExecuteAsync(ItemQueryRequest request)
     {
-        var result = await _broker.GetItemAsync<Invoice>(ItemQueryRequest.Create(request.Uid));
+        var result = await _broker.GetItemAsync<InvoiceView>(ItemQueryRequest.Create(request.Uid));
 
         var invoice = result.Item ?? new();
 

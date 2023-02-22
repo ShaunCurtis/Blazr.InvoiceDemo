@@ -7,7 +7,7 @@ namespace Blazr.App.Core;
 
 public sealed class InvoiceData : IGuidIdentity
 {
-    private Invoice _baseInvoice { get; set; } = new Invoice();
+    private InvoiceView _baseInvoice { get; set; } = new InvoiceView();
     private readonly List<InvoiceItemView> _baseInvoiceItems = new();
     private readonly List<InvoiceItemView> _invoiceItems = new();
     private readonly List<InvoiceItemView> _newInvoiceItems = new();
@@ -15,7 +15,7 @@ public sealed class InvoiceData : IGuidIdentity
 
     public Guid Uid { get; init; } = Guid.NewGuid();
 
-    public Invoice Invoice { get; private set; } = new Invoice();
+    public InvoiceView Invoice { get; private set; } = new InvoiceView();
 
     public bool IsNewInvoice { get; private set; }
     public bool InvoiceIsDirty => this.Invoice.Equals(_baseInvoice);
@@ -54,7 +54,7 @@ public sealed class InvoiceData : IGuidIdentity
     public InvoiceData()
         => this.IsNewInvoice = true;
 
-    public InvoiceData(Invoice? invoice, IEnumerable<InvoiceItemView>? items)
+    public InvoiceData(InvoiceView? invoice, IEnumerable<InvoiceItemView>? items)
     {
         this.IsNewInvoice = invoice is null;
 

@@ -6,9 +6,9 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace Blazr.App.Core;
+namespace Blazr.App.Infrastructure;
 
-public sealed record DboInvoice : IGuidIdentity
+internal sealed record DboInvoice : IGuidIdentity
 {
     [Key] public Guid Uid { get; init; } = Guid.Empty;
 

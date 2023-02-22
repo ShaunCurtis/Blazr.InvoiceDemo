@@ -46,10 +46,12 @@ public sealed class InMemoryInvoiceDbContext
             .ToInMemoryQuery(()
                 => from i in this.InvoiceItem
                    join p in this.Product! on i.ProductUid equals p.Uid
+                   join iv in this.Invoice! on i.InvoiceUid equals iv.Uid 
                    select new InvoiceItemView
                    {
                        Uid = i.Uid,
                        InvoiceUid = i.InvoiceUid,
+                       InvoiceNumber = iv.InvoiceNumber,
                        ProductUid = i.ProductUid,
                        ProductName = p.ProductName,
                        ProductCode = p.ProductCode,
