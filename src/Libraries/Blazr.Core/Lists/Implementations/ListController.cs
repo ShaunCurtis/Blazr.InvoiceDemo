@@ -5,10 +5,10 @@
 /// ============================================================
 namespace Blazr.Core;
 
-public sealed class ListController<TRecord> : IEnumerable<TRecord>
+public sealed class ListController<TRecord> : IListController<TRecord>
     where TRecord : class, new()
 {
-    private ILogger<ListController<TRecord>> _logger;
+    private ILogger<IListController<TRecord>> _logger;
     private List<TRecord>? _items = new List<TRecord>();
 
     private IListEventConsumer<TRecord>? _consumer;
@@ -21,9 +21,9 @@ public sealed class ListController<TRecord> : IEnumerable<TRecord>
     public bool IsPaging => (this.ListState.PageSize > 0);
     public bool HasList => _items is not null;
     public bool HasPager => _pagerProvider is not null;
-    public readonly ListState<TRecord> ListState = new ListState<TRecord>();
+    public ListState<TRecord> ListState { get; } = new ListState<TRecord>();
 
-    public ListController(ILogger<ListController<TRecord>> logger)
+    public ListController(ILogger<IListController<TRecord>> logger)
         => _logger = logger;
 
     public void RegisterPager(IListPagerProvider? pager)

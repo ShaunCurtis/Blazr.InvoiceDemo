@@ -10,8 +10,3 @@ public class InvoiceItemSorter : RecordSorter<InvoiceItem>, IRecordSorter<Invoic
 {
     protected override Expression<Func<InvoiceItem, object>> DefaultSorter => item => item.ItemUnitPrice;
 }
-
-public class InvoiceItemViewSorter : RecordSorter<InvoiceItemView>, IRecordSorter<InvoiceItemView>
-{
-    protected override Expression<Func<InvoiceItemView, object>> DefaultSorter => item => item.ProductName;
-}

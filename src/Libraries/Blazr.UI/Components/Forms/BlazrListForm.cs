@@ -10,11 +10,11 @@ public sealed class BlazrListForm<TRecord> : ComponentBase
 {
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
-    [Parameter] [EditorRequired] public ListController<TRecord>? ListContext { get; set; }
+    [Parameter] [EditorRequired] public IListController<TRecord>? ListContext { get; set; }
 
     protected override void BuildRenderTree(RenderTreeBuilder builder)
     {
-        builder.OpenComponent<CascadingValue<ListController<TRecord>>>(0);
+        builder.OpenComponent<CascadingValue<IListController<TRecord>>>(0);
         builder.AddAttribute(1, "Value", this.ListContext);
         builder.AddAttribute(2, "IsFixed", true);
         builder.AddAttribute(3, "ChildContent", ChildContent);

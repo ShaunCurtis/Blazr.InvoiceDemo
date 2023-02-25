@@ -3,7 +3,6 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
 namespace Blazr.UI.BlazrGrid;
 
 public sealed partial class BlazrSortControl<TGridItem> : UIControlBase, IDisposable
@@ -11,7 +10,7 @@ public sealed partial class BlazrSortControl<TGridItem> : UIControlBase, IDispos
 {
     private bool showSortingDropdown = false;
 
-    [CascadingParameter] public ListController<TGridItem>? ListController { get; set; }
+    [CascadingParameter] public IListController<TGridItem>? ListController { get; set; }
 
     [Parameter] public bool IsMaxColumn { get; set; }
 
@@ -22,7 +21,7 @@ public sealed partial class BlazrSortControl<TGridItem> : UIControlBase, IDispos
     [Parameter] public string SortField { get; set; } = string.Empty;
 
     private string showCss => showSortingDropdown ? "show" : String.Empty;
-    private ListController<TGridItem> _listController = default!;
+    private IListController<TGridItem> _listController = default!;
 
     protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
     {

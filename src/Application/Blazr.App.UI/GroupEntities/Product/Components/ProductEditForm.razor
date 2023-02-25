@@ -1,10 +1,16 @@
 ﻿@namespace Blazr.App.UI
-@inherits UIEditorFormBase<Invoice, InvoiceEditContext, InvoiceEntityService>
+@inherits UIEditorFormBase<Product, ProductEditContext, ProductEntityService>
 
 <div class="row">
 
+    <div class="col-12 col-lg-12 mb-2">
+        <BlazrInputControl Type=InputType.Text class="form-control" DisplayName="Product Name" UpdateOnInput=true @bind-Value=this.EditContext.ProductName />
+    </div>
     <div class="col-12 col-lg-6 mb-2">
-        <BlazrInputControl Type=InputType.Date class="form-control" DisplayName="Invoice Date" UpdateOnInput=true @bind-Value=this.EditContext.InvoiceDate />
+        <BlazrInputControl Type=InputType.Text class="form-control" DisplayName="Product Code" UpdateOnInput=true @bind-Value=this.EditContext.ProductCode />
+    </div>
+    <div class="col-12 col-lg-6 mb-2">
+        <BlazrInputControl Type=InputType.Number class="form-control" DisplayName="Unit Price £" UpdateOnInput=true @bind-Value=this.EditContext.ProductUnitPrice />
     </div>
 
 </div>
@@ -14,7 +20,7 @@
     protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
     {
         if (firstRender)
-            this.Presenter.EditStateContext.AddFluentValidation<InvoiceValidator>();
+            this.Presenter.EditStateContext.AddFluentValidation<ProductValidator>();
 
         return ValueTask.FromResult(true);
     }

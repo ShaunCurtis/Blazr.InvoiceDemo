@@ -39,7 +39,7 @@ public class RepositoryBrokerTests
 
         var cancelToken = new CancellationToken();
         var listRequest = new ListQueryRequest { StartIndex = 0, PageSize = 1000, Cancellation = cancelToken };
-        var result = await broker!.GetItemsAsync<InvoiceView>(listRequest);
+        var result = await broker!.GetItemsAsync<Invoice>(listRequest);
 
         Assert.Equal(3, result.Items.Count());
     }
@@ -52,7 +52,7 @@ public class RepositoryBrokerTests
 
         var testUid = _testDataProvider.TestInvoiceUid;
 
-        var presenter = provider.GetService<InvoiceDataPresenter>()!;
+        var presenter = provider.GetService<InvoicePresenter>()!;
 
         await presenter.LoadAsync(testUid);
         var items = presenter.Item.InvoiceItems.Count();
@@ -73,7 +73,7 @@ public class RepositoryBrokerTests
 
         var testUid = _testDataProvider.TestInvoiceUid;
 
-        var presenter = provider.GetService<InvoiceDataPresenter>()!;
+        var presenter = provider.GetService<InvoicePresenter>()!;
 
         await presenter.LoadAsync(testUid);
         var items = presenter.Item.InvoiceItems.Count();
@@ -90,7 +90,7 @@ public class RepositoryBrokerTests
         await presenter.SaveAsync();
 
         // Get a new InvoiceNManager instance and load it
-        var newPresenter = provider.GetService<InvoiceDataPresenter>()!;
+        var newPresenter = provider.GetService<InvoicePresenter>()!;
         await newPresenter.LoadAsync(testUid);
 
         var updatedItem = newPresenter.Item.InvoiceItems.First(item => item.Uid.Equals(testInvoiceItemUid));
@@ -109,7 +109,7 @@ public class RepositoryBrokerTests
         var testUid = _testDataProvider.TestInvoiceUid;
 
         // Get a ViewManager instance and load it
-        var presenter = provider.GetService<InvoiceDataPresenter>()!;
+        var presenter = provider.GetService<InvoicePresenter>()!;
         await presenter.LoadAsync(testUid);
         var items = presenter.Item.InvoiceItems.Count();
 
@@ -121,7 +121,7 @@ public class RepositoryBrokerTests
         await presenter.SaveAsync();
 
         // Get a new InvoiceNManager instance and load it
-        var newPresenter = provider.GetService<InvoiceDataPresenter>()!;
+        var newPresenter = provider.GetService<InvoicePresenter>()!;
         await newPresenter.LoadAsync(testUid);
 
         Assert.Equal(newPresenter.Item.InvoiceItems.Count(), presenter.Item.InvoiceItems.Count());

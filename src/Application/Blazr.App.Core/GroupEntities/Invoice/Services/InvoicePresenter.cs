@@ -6,23 +6,23 @@
 
 namespace Blazr.App.Core;
 
-public class InvoiceDataPresenter
+public class InvoicePresenter
 {
     private readonly ICustomDataBroker _dataBroker;
-    private ILogger<InvoiceDataPresenter> _logger;
+    private ILogger<InvoicePresenter> _logger;
 
-    public InvoiceDataPresenter(ICustomDataBroker dataBroker, ILogger<InvoiceDataPresenter> logger)
+    public InvoicePresenter(ICustomDataBroker dataBroker, ILogger<InvoicePresenter> logger)
     {
         _dataBroker = dataBroker;
         _logger = logger;
     }
 
-    public InvoiceData Item { get; private set; } = new();
+    public InvoiceAggregate Item { get; private set; } = new();
     public IDataResult? LastResult { get; private set; }
 
     public async ValueTask LoadAsync(Guid uid)
     {
-        var result = await _dataBroker.GetItemAsync<InvoiceData>(ItemQueryRequest.Create(uid));
+        var result = await _dataBroker.GetItemAsync<InvoiceAggregate>(ItemQueryRequest.Create(uid));
 
         this.LogResult(result);
 
@@ -32,7 +32,7 @@ public class InvoiceDataPresenter
 
     public async ValueTask SaveAsync()
     {
-        var result = await _dataBroker.SaveItemAsync(CommandRequest<InvoiceData>.Create(this.Item));
+        var result = await _dataBroker.SaveItemAsync(CommandRequest<InvoiceAggregate>.Create(this.Item));
 
         this.LogResult(result);
 
@@ -42,7 +42,7 @@ public class InvoiceDataPresenter
 
     public async ValueTask DeleteAsync()
     {
-        var result = await _dataBroker.DeleteItemAsync(CommandRequest<InvoiceData>.Create(this.Item));
+        var result = await _dataBroker.DeleteItemAsync(CommandRequest<InvoiceAggregate>.Create(this.Item));
 
         this.LogResult(result);
 

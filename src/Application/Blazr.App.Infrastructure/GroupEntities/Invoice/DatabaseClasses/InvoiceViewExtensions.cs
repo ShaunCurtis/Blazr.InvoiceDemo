@@ -8,7 +8,7 @@ namespace Blazr.App.Infrastructure;
 
 internal static class InvoiceViewExtensions
 {
-    internal static DboInvoice ToDboInvoice(this InvoiceView item)
+    internal static DboInvoice ToDboInvoice(this Invoice item)
         => new()
         {
             Uid = item.Uid,

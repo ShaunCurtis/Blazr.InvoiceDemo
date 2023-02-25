@@ -4,11 +4,11 @@
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
 
-namespace Blazr.App.Core;
+namespace Blazr.App.Infrastructure;
 
-public static class InvoiceItemViewExtensions
+internal static class InvoiceItemViewExtensions
 {
-    public static InvoiceItem ToInvoiceItem(this InvoiceItemView item)
+    internal static DboInvoiceItem ToDboInvoiceItem(this InvoiceItem item)
         => new()
         {
             Uid = item.Uid,

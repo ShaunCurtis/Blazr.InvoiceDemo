@@ -16,6 +16,12 @@ public sealed record InvoiceItem : IGuidIdentity
 
     public Guid ProductUid { get; init; } = Guid.Empty;
 
+    public string InvoiceNumber { get; init; } = "Not Set";
+
+    public string ProductCode { get; init; } = "Not Set";
+
+    public string ProductName { get; init; } = "Not Set";
+
     public int ItemQuantity { get; init; }
 
     public decimal ItemUnitPrice { get; init; }

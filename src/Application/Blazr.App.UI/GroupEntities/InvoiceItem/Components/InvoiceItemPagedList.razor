@@ -1,7 +1,24 @@
 ﻿@namespace Blazr.App.UI
-@inherits UIPagedListFormBase<InvoiceItem, InvoiceEntityService>
+@inherits UIPagedListFormBase<InvoiceItem, InvoiceItemEntityService>
 
-@*<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants." IsNoWrap=true Title="Invoice No">
+<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants.ProductCode" IsNoWrap=true Title="Product Code">
+    @context.ProductCode
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants.ProductName" IsNoWrap=true Title="Product">
+    @context.ProductName
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants.ItemQuantity" IsNoWrap=true Title="Qty">
+    @context.ItemQuantity
+</BlazrSortedGridColumn>
+
+<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants.ItemUnitPrice" IsNoWrap=true Title="Unit Cost">
+    @context.ItemUnitPrice.AsSterling()
+</BlazrSortedGridColumn>
+
+@*
+<BlazrSortedGridColumn TGridItem="InvoiceItem" SortField="@ApplicationConstants." IsNoWrap=true Title="Invoice No">
     @context.
 </BlazrSortedGridColumn>
 
@@ -24,3 +41,14 @@
     </UIButtonGroup>
 </BlazrGridColumn>
 *@
+
+@code {
+    [Parameter] public Guid InvoiceUid { get; set; }
+
+    protected override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
+    {
+        var filters = new List<FilterDefinition> { new FilterDefinition(ApplicationConstants.ByInvoiceUid, InvoiceUid.ToString()) };
+        this.Presenter.SetFilter(new FilterRequest<InvoiceItem>() { Filters = filters });
+        return ValueTask.FromResult( true);
+    }
+}

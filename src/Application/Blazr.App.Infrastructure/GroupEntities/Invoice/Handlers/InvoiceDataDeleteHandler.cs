@@ -6,7 +6,7 @@
 
 namespace Blazr.App.Infrastructure;
 
-public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceData>
+public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceAggregate>
 {
     private readonly IDataBroker _broker;
     private ILogger<InvoiceDataItemHandler> _logger;
@@ -17,13 +17,13 @@ public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceData
         _logger = logger;
     }
 
-    public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceData> request)
+    public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceAggregate> request)
     {
         bool errorTrip = false;
 
         foreach (var item in request.Item.InvoiceItems)
         {
-            var result = await _broker.DeleteItemAsync<InvoiceItem>(CommandRequest<InvoiceItem>.Create(item.ToInvoiceItem()));
+            var result = await _broker.DeleteItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
             if (!result.Successful)
                 _logger.LogError($"InvoiceItem - {item.Uid} - {result.Message}");
 

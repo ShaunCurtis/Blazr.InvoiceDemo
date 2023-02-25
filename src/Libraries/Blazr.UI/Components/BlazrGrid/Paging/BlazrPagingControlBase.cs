@@ -3,7 +3,6 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
 namespace Blazr.UI;
 
 public abstract class BlazrPagingControlBase<TRecord>
@@ -16,7 +15,7 @@ public abstract class BlazrPagingControlBase<TRecord>
 
     [Parameter] public bool ShowPageOf { get; set; } = true;
 
-    [CascadingParameter] public ListController<TRecord>? ListController { get; set; }
+    [CascadingParameter] public IListController<TRecord>? ListController { get; set; }
 
     protected override async ValueTask<bool> OnParametersChangedAsync(bool firstRender)
     {

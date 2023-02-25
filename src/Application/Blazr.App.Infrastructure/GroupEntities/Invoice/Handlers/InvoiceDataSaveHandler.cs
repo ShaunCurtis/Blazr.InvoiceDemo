@@ -6,7 +6,7 @@
 
 namespace Blazr.App.Infrastructure;
 
-public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
+public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceAggregate>
 {
     private readonly IDataBroker _broker;
     private ILogger<InvoiceDataItemHandler> _logger;
@@ -17,7 +17,7 @@ public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
         _logger = logger;
     }
 
-    public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceData> request)
+    public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceAggregate> request)
     {
         bool errorTrip = false;
 
@@ -45,7 +45,7 @@ public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
         // Update all the existing items
         foreach (var item in invoiceData.UpdatedItems)
         {
-            var result = await _broker.UpdateItemAsync<InvoiceItem>(CommandRequest<InvoiceItem>.Create(item.ToInvoiceItem()));
+            var result = await _broker.UpdateItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
             if (!result.Successful)
                 _logger.LogError($"Invoice Item - {item.Uid} - {result.Message}");
 
@@ -55,7 +55,7 @@ public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
         // Add all the new items
         foreach (var item in invoiceData.AddedItems)
         {
-            var result = await _broker.CreateItemAsync<InvoiceItem>(CommandRequest<InvoiceItem>.Create(item.ToInvoiceItem()));
+            var result = await _broker.CreateItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
             if (!result.Successful)
                 _logger.LogError($"Invoice Item - {item.Uid} - {result.Message}");
 
@@ -65,7 +65,7 @@ public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceData>
         // Remove all the items in the deleted collection
         foreach (var item in invoiceData.DeletedItems)
         {
-            var result = await _broker.DeleteItemAsync<InvoiceItem>(CommandRequest<InvoiceItem>.Create(item.ToInvoiceItem()));
+            var result = await _broker.DeleteItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
             if (!result.Successful)
                 _logger.LogError($"Invoice Item - {item.Uid} - {result.Message}");
 

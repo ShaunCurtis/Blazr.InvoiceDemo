@@ -10,8 +10,3 @@ public class InvoiceSorter : RecordSorter<Invoice>, IRecordSorter<Invoice>
 {
     protected override Expression<Func<Invoice, object>>? DefaultSorter => item => item.InvoiceDate;
 }
-
-public class InvoiceViewSorter : RecordSorter<InvoiceView>, IRecordSorter<InvoiceView>
-{
-    protected override Expression<Func<InvoiceView, object>>? DefaultSorter => item => item.InvoiceDate;
-}

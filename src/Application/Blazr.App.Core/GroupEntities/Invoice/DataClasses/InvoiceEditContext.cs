@@ -35,13 +35,23 @@ public sealed class InvoiceEditContext : RecordEditContextBase<Invoice>
         set => UpdateifChangedAndNotify(ref _customerUid!, value, this.CustomerUid, ApplicationConstants.CustomerUid);
     }
 
+    private string _customerName = String.Empty;
+    public string CustomerName
+    {
+        get => _customerName;
+        set => UpdateifChangedAndNotify(ref _customerName!, value, this.CustomerName, ApplicationConstants.CustomerName);
+    }
+
     public override void LoadRecord(Invoice record)
     {
         this.BaseRecord = record ??= this.Record with { };
         this.Uid = record.Uid;
+        this.CustomerUid = record.CustomerUid;
+        this.CustomerName = record.CustomerName;
         this.InvoiceNumber= record.InvoiceNumber;
         this.InvoiceDate = record.InvoiceDate;
-        this.CustomerUid = record.CustomerUid;
+        this.InvoicePrice = record.InvoicePrice;
+
     }
 
     public override Invoice AsNewRecord()
@@ -52,7 +62,9 @@ public sealed class InvoiceEditContext : RecordEditContextBase<Invoice>
         {
             Uid = this.Uid,
             CustomerUid = this.CustomerUid,
+            CustomerName = this.CustomerName,
             InvoiceNumber = this.InvoiceNumber,
-            InvoiceDate = this.InvoiceDate ?? DateOnly.MinValue
+            InvoiceDate = this.InvoiceDate ?? DateOnly.MinValue,
+            InvoicePrice= this.InvoicePrice,
         };
 }

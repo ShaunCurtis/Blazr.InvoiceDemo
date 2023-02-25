@@ -1,4 +1,5 @@
-﻿/// ============================================================
+﻿using Blazr.Core;
+/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
@@ -17,6 +18,6 @@ public static class ProductServices
         services.AddTransient<IReadPresenter<Product>, ReadPresenter<Product>>();
         services.AddTransient<IRecordSorter<Product>, ProductSorter>();
         //services.AddTransient<IRecordFilter<Product>, ProductFilter>();
-        services.AddTransient<ListController<Product>>();
+        services.AddTransient<IListController<Product>, ListController<Product>>();
     }
 }

@@ -5,22 +5,22 @@
 /// ============================================================
 namespace Blazr.App.Core;
 
-public sealed class InvoiceData : IGuidIdentity
+public sealed class InvoiceAggregate : IGuidIdentity
 {
-    private InvoiceView _baseInvoice { get; set; } = new InvoiceView();
-    private readonly List<InvoiceItemView> _baseInvoiceItems = new();
-    private readonly List<InvoiceItemView> _invoiceItems = new();
-    private readonly List<InvoiceItemView> _newInvoiceItems = new();
-    private readonly List<InvoiceItemView> _deletedInvoiceItems = new();
+    private Invoice _baseInvoice { get; set; } = new Invoice();
+    private readonly List<InvoiceItem> _baseInvoiceItems = new();
+    private readonly List<InvoiceItem> _invoiceItems = new();
+    private readonly List<InvoiceItem> _newInvoiceItems = new();
+    private readonly List<InvoiceItem> _deletedInvoiceItems = new();
 
     public Guid Uid { get; init; } = Guid.NewGuid();
 
-    public InvoiceView Invoice { get; private set; } = new InvoiceView();
+    public Invoice Invoice { get; private set; } = new Invoice();
 
     public bool IsNewInvoice { get; private set; }
     public bool InvoiceIsDirty => this.Invoice.Equals(_baseInvoice);
 
-    public IEnumerable<InvoiceItemView> InvoiceItems
+    public IEnumerable<InvoiceItem> InvoiceItems
     {
         get
         {
@@ -30,11 +30,11 @@ public sealed class InvoiceData : IGuidIdentity
         }
     }
 
-    public IEnumerable<InvoiceItemView> UpdatedItems
+    public IEnumerable<InvoiceItem> UpdatedItems
     {
         get
         {
-            var list = new List<InvoiceItemView>();
+            var list = new List<InvoiceItem>();
 
             foreach (var item in _invoiceItems)
             {
@@ -45,16 +45,16 @@ public sealed class InvoiceData : IGuidIdentity
         }
     }
 
-    public IEnumerable<InvoiceItemView> DeletedItems
+    public IEnumerable<InvoiceItem> DeletedItems
         => _deletedInvoiceItems.ToList();
 
-    public IEnumerable<InvoiceItemView> AddedItems
+    public IEnumerable<InvoiceItem> AddedItems
         => _newInvoiceItems.ToList();
 
-    public InvoiceData()
+    public InvoiceAggregate()
         => this.IsNewInvoice = true;
 
-    public InvoiceData(InvoiceView? invoice, IEnumerable<InvoiceItemView>? items)
+    public InvoiceAggregate(Invoice? invoice, IEnumerable<InvoiceItem>? items)
     {
         this.IsNewInvoice = invoice is null;
 
@@ -65,16 +65,16 @@ public sealed class InvoiceData : IGuidIdentity
             _invoiceItems.AddRange(items);
     }
 
-    public bool AddInvoiceItem(InvoiceItemView item)
+    public bool AddInvoiceItem(InvoiceItem item)
         => this.addInvoiceItem(item);
 
-    public bool RemoveInvoiceItem(InvoiceItemView item)
+    public bool RemoveInvoiceItem(InvoiceItem item)
         => this.removeInvoiceItem(item);
 
-    public bool UpdateInvoiceItem(InvoiceItemView item)
+    public bool UpdateInvoiceItem(InvoiceItem item)
         => this.updateInvoiceItem(item);
 
-    private bool removeInvoiceItem(InvoiceItemView item)
+    private bool removeInvoiceItem(InvoiceItem item)
     {
         if (_invoiceItems.Remove(item) || _newInvoiceItems.Remove(item))
         {
@@ -85,7 +85,7 @@ public sealed class InvoiceData : IGuidIdentity
         return false;
     }
 
-    private bool addInvoiceItem(InvoiceItemView item)
+    private bool addInvoiceItem(InvoiceItem item)
     {
         if (this.InvoiceItemExists(item.Uid))
             return false;
@@ -94,9 +94,9 @@ public sealed class InvoiceData : IGuidIdentity
         return true;
     }
 
-    private bool updateInvoiceItem(InvoiceItemView item)
+    private bool updateInvoiceItem(InvoiceItem item)
     {
-        if (!this.TryGetInvoiceItem(item.Uid, out InvoiceItemView? existingItem))
+        if (!this.TryGetInvoiceItem(item.Uid, out InvoiceItem? existingItem))
             return false;
 
         if (_newInvoiceItems.Remove(existingItem))
@@ -117,7 +117,7 @@ public sealed class InvoiceData : IGuidIdentity
     private bool InvoiceItemExists(Guid uid)
         => this.InvoiceItems.Any(item => item.Uid.Equals(uid));
 
-    private bool TryGetInvoiceItem(Guid uid, [NotNullWhen(true)] out InvoiceItemView? item)
+    private bool TryGetInvoiceItem(Guid uid, [NotNullWhen(true)] out InvoiceItem? item)
     {
         item = this.InvoiceItems.FirstOrDefault(item => item.Uid.Equals(uid));
         return item != null;

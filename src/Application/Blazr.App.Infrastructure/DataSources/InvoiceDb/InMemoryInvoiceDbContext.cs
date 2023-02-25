@@ -11,8 +11,8 @@ public sealed class InMemoryInvoiceDbContext
     public DbSet<User> User { get; set; } = default!;
     public DbSet<Customer> Customer { get; set; } = default!;
     public DbSet<Product> Product { get; set; } = default!;
-    public DbSet<InvoiceView> InvoiceView { get; set; } = default!;
-    public DbSet<InvoiceItemView> InvoiceItemView { get; set; } = default!;
+    public DbSet<Invoice> InvoiceView { get; set; } = default!;
+    public DbSet<InvoiceItem> InvoiceItemView { get; set; } = default!;
     public DbSet<CustomerFkItem> CustomerFK { get; set; }
     public DbSet<ProductFkItem> ProductFK { get; set; }
 
@@ -26,14 +26,14 @@ public sealed class InMemoryInvoiceDbContext
         modelBuilder.Entity<User>().ToTable("User");
         modelBuilder.Entity<Customer>().ToTable("Customer");
         modelBuilder.Entity<Product>().ToTable("Product");
-        modelBuilder.Entity<Invoice>().ToTable("Invoice");
-        modelBuilder.Entity<InvoiceItem>().ToTable("InvoiceItem");
+        modelBuilder.Entity<DboInvoice>().ToTable("Invoice");
+        modelBuilder.Entity<DboInvoiceItem>().ToTable("InvoiceItem");
 
-        modelBuilder.Entity<InvoiceView>()
+        modelBuilder.Entity<Invoice>()
             .ToInMemoryQuery(()
                 => from i in this.DboInvoice
                    join c in this.Customer! on i.CustomerUid equals c.Uid
-                   select new InvoiceView
+                   select new Invoice
                    {
                        Uid = i.Uid,
                        CustomerUid = i.CustomerUid,
@@ -43,12 +43,12 @@ public sealed class InMemoryInvoiceDbContext
                        InvoicePrice = i.InvoicePrice,
                    }).HasKey(x => x.Uid);
 
-        modelBuilder.Entity<InvoiceItemView>()
+        modelBuilder.Entity<InvoiceItem>()
             .ToInMemoryQuery(()
                 => from i in this.DboInvoiceItem
                    join p in this.Product! on i.ProductUid equals p.Uid
                    join iv in this.DboInvoice! on i.InvoiceUid equals iv.Uid 
-                   select new InvoiceItemView
+                   select new InvoiceItem
                    {
                        Uid = i.Uid,
                        InvoiceUid = i.InvoiceUid,

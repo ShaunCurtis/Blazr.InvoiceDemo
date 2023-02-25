@@ -3,7 +3,6 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
 namespace Blazr.Core;
 
 public class ListPresenter<TRecord, TEntityService>
@@ -13,17 +12,18 @@ public class ListPresenter<TRecord, TEntityService>
 {
     private readonly IDataBroker _dataBroker;
     private readonly IUiStateService _uiStateService;
-    private readonly ListController<TRecord> _listController;
+    private readonly IListController<TRecord> _listController;
     private readonly INotificationService<TEntityService> _notificationService;
 
-    public ListController<TRecord> ListController => _listController;
+    public IListController<TRecord> ListController => _listController;
 
     public Guid StateId { get; set; } = Guid.NewGuid();
 
     public readonly Guid InstanceId = Guid.NewGuid();
     public int DefaultPageSize { get; set; } = 1000;
+    public IEnumerable<FilterDefinition> DefaultFilters { get; set; } = Enumerable.Empty<FilterDefinition>();
 
-    public ListPresenter(IDataBroker dataBroker, IUiStateService uiStateService, ListController<TRecord> controller, INotificationService<TEntityService> notificationService)
+    public ListPresenter(IDataBroker dataBroker, IUiStateService uiStateService, IListController<TRecord> controller, INotificationService<TEntityService> notificationService)
     {
         _dataBroker = dataBroker;
         _uiStateService = uiStateService;
@@ -33,6 +33,9 @@ public class ListPresenter<TRecord, TEntityService>
         _listController.RegisterForEvents(this as IListEventConsumer<TRecord>);
         _notificationService.RecordChanged += this.OnListUpdated;
     }
+
+    public void SetFilter(FilterRequest<TRecord> request)
+        => this.DefaultFilters = request.Filters;
 
     public async ValueTask GetItemsAsync(ListQueryRequest request, object? sender = null)
     {
@@ -100,7 +103,7 @@ public class ListPresenter<TRecord, TEntityService>
         var defaultSort = new SortRequest();
 
         var defaultPaging = new PagingRequest { PageSize = eventArgs.InitialPageSize ?? this.DefaultPageSize };
-        listState.Set(defaultPaging, defaultSort, null);
+        listState.Set(defaultPaging, defaultSort, DefaultFilters);
 
         return listState.GetListQueryRequest();
     }

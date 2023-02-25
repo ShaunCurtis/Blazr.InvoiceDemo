@@ -21,10 +21,7 @@ public class ListState<TRecord>
 
     public int ListTotalCount { get; private set; } = 0;
 
-    public Expression<Func<TRecord, bool>>? FilterExpression { get; private set; }
     public IEnumerable<FilterDefinition> Filters { get; private set; } = Enumerable.Empty<FilterDefinition>();
-
-    public Expression<Func<TRecord, object>>? SortExpression { get; private set; }
 
     public int Page => StartIndex / PageSize;
 
@@ -51,7 +48,6 @@ public class ListState<TRecord>
         this.PageSize = rquest.PageSize;
     }
 
-    //TODO needs fixing
     public void SetFiltering(FilterRequest<TRecord> request)
         => this.Filters = request.Filters;
 

@@ -12,6 +12,14 @@ public sealed record FilterDefinition
     public string FilterName { get; init; } = string.Empty;
     public string FilterData { get; init; } = string.Empty;
 
+    public FilterDefinition() { }
+
+    public FilterDefinition( string filterName, string filterData) 
+    { 
+        FilterName = filterName;
+        FilterData = filterData;
+    }
+
     public bool TryFromJson<T>([NotNullWhen(true)] out T? value)
     {
         JsonSerializerOptions options = new() { IncludeFields = true };

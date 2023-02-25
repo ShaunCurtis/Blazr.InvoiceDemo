@@ -3,7 +3,6 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-
 namespace Blazr.UI.BlazrGrid;
 
 // The Component is configured to get it's data set from one of two sources (in order of precidence):
@@ -16,16 +15,16 @@ public partial class BlazrGrid<TGridItem> : UIBase, IDisposable
     /// <summary>
     /// One of the three mechanisms for providing 
     /// </summary>
-    [CascadingParameter] private ListController<TGridItem>? cascadedListComponentController { get; set; }
+    [CascadingParameter] private IListController<TGridItem>? cascadedListComponentController { get; set; }
 
-    [Parameter] public ListController<TGridItem>? ListComponentController { get; set; }
+    [Parameter] public IListController<TGridItem>? ListComponentController { get; set; }
 
     private bool _initialized;
     private RenderFragment _gridRenderFragment;
     private TaskCompletionSource? _firstRenderTaskManager = null;
     private Task firstRenderTask => _firstRenderTaskManager?.Task ?? Task.CompletedTask;
     private readonly List<IBlazrGridItem<TGridItem>> _gridColumns = new();
-    private ListController<TGridItem>? _listComponentController { get; set; }
+    private IListController<TGridItem>? _listComponentController { get; set; }
 
     private IEnumerable<TGridItem> _items = Enumerable.Empty<TGridItem>();
 

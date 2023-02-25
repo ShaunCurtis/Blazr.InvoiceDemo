@@ -1,4 +1,5 @@
-﻿/// ============================================================
+﻿using Blazr.Core;
+/// ============================================================
 /// Author: Shaun Curtis, Cold Elm Coders
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
@@ -17,7 +18,7 @@ public static class CustomerCoreServices
         services.AddTransient<IReadPresenter<Customer>, ReadPresenter<Customer>>();
         services.AddTransient<IRecordSorter<Customer>, CustomerSorter>();
         //services.AddTransient<IRecordFilter<Customer>, CustomerFilter>();
-        services.AddTransient<ListController<Customer>>();
+        services.AddTransient<IListController<Customer>, ListController<Customer>>();
     }
 
 }
