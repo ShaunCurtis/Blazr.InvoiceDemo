@@ -11,3 +11,9 @@ public interface ICreateRequestHandler
     public ValueTask<CommandResult> ExecuteAsync<TRecord>(CommandRequest<TRecord> request)
         where TRecord : class, new();
 }
+
+public interface ICreateRequestHandler<TRecord>
+        where TRecord : class, new()
+{
+    public ValueTask<CommandResult> ExecuteAsync(CommandRequest<TRecord> request);
+}

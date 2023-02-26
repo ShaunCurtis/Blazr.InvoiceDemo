@@ -13,19 +13,22 @@ public sealed class RepositoryDataBroker : IDataBroker
     private readonly IUpdateRequestHandler _updateRequestHandler;
     private readonly ICreateRequestHandler _createRequestHandler;
     private readonly IDeleteRequestHandler _deleteRequestHandler;
+    private readonly ISaveRequestHandler _saveRequestHandler;
 
     public RepositoryDataBroker(
         IListRequestHandler listRequestHandler,
         IItemRequestHandler itemRequestHandler,
         ICreateRequestHandler createRequestHandler,
         IUpdateRequestHandler updateRequestHandler,
-        IDeleteRequestHandler deleteRequestHandler)
+        IDeleteRequestHandler deleteRequestHandler,
+        ISaveRequestHandler saveRequestHandler)
     {
         _listRequestHandler = listRequestHandler;
         _itemRequestHandler = itemRequestHandler;
         _createRequestHandler = createRequestHandler;
         _updateRequestHandler = updateRequestHandler;
         _deleteRequestHandler = deleteRequestHandler;
+        _saveRequestHandler = saveRequestHandler;
     }
 
     public ValueTask<ItemQueryResult<TRecord>> GetItemAsync<TRecord>(ItemQueryRequest request) where TRecord : class, new()
@@ -42,4 +45,7 @@ public sealed class RepositoryDataBroker : IDataBroker
 
     public ValueTask<CommandResult> DeleteItemAsync<TRecord>(CommandRequest<TRecord> request) where TRecord : class, new()
         => _deleteRequestHandler.ExecuteAsync<TRecord>(request);
+
+    public ValueTask<CommandResult> SaveItemAsync<TRecord>(CommandRequest<TRecord> request) where TRecord : class, new()
+        => _saveRequestHandler.ExecuteAsync<TRecord>(request);
 }

@@ -3,17 +3,16 @@
 /// License: Use And Donate
 /// If you use it, donate something to a charity somewhere
 /// ============================================================
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Blazr.Infrastructure;
 
-public sealed class ListRequestHandler<TDbContext> : IListRequestHandler
+public sealed class ListRequestBaseServerHandler<TDbContext> : IListRequestHandler
     where TDbContext : DbContext
 {
     private readonly IDbContextFactory<TDbContext> _factory;
     private readonly IServiceProvider _serviceProvider;
 
-    public ListRequestHandler(IDbContextFactory<TDbContext> factory, IServiceProvider serviceProvider)
+    public ListRequestBaseServerHandler(IDbContextFactory<TDbContext> factory, IServiceProvider serviceProvider)
     {
         _factory = factory;
         _serviceProvider = serviceProvider;

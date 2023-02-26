@@ -6,13 +6,13 @@
 
 namespace Blazr.Infrastructure;
 
-public sealed class CreateRequestHandler<TDbContext>
+public sealed class CreateRequestBaseServerHandler<TDbContext>
     : ICreateRequestHandler
     where TDbContext : DbContext
 {
     private readonly IDbContextFactory<TDbContext> _factory;
 
-    public CreateRequestHandler(IDbContextFactory<TDbContext> factory)
+    public CreateRequestBaseServerHandler(IDbContextFactory<TDbContext> factory)
         => _factory = factory;
 
     public async ValueTask<CommandResult> ExecuteAsync<TRecord>(CommandRequest<TRecord> request)

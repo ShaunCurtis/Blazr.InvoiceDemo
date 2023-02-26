@@ -8,10 +8,10 @@ namespace Blazr.App.Core;
 
 public class InvoicePresenter
 {
-    private readonly ICustomDataBroker _dataBroker;
+    private readonly IDataBroker _dataBroker;
     private ILogger<InvoicePresenter> _logger;
 
-    public InvoicePresenter(ICustomDataBroker dataBroker, ILogger<InvoicePresenter> logger)
+    public InvoicePresenter(IDataBroker dataBroker, ILogger<InvoicePresenter> logger)
     {
         _dataBroker = dataBroker;
         _logger = logger;

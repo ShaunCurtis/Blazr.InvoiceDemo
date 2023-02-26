@@ -6,23 +6,19 @@
 
 namespace Blazr.Infrastructure;
 
-public sealed class DeleteRequestHandler<TDbContext>
-    : IDeleteRequestHandler
+public sealed class SaveRequestBaseServerHandler<TDbContext>
+    : ISaveRequestHandler
     where TDbContext : DbContext
 {
     private readonly IDbContextFactory<TDbContext> _factory;
 
-    public DeleteRequestHandler(IDbContextFactory<TDbContext> factory)
+    public SaveRequestBaseServerHandler(IDbContextFactory<TDbContext> factory)
         => _factory = factory;
 
     public async ValueTask<CommandResult> ExecuteAsync<TRecord>(CommandRequest<TRecord> request)
         where TRecord : class, new()
     {
-        using var dbContext = _factory.CreateDbContext();
-
-        dbContext.Remove<TRecord>(request.Item);
-        return await dbContext.SaveChangesAsync(request.Cancellation) == 1
-            ? CommandResult.Success("Record Deleted")
-            : CommandResult.Failure("Error deleting Record");
+        await Task.Yield();
+        throw new DataPipelineException($"There's no base implementation of Save defined in {this.GetType().FullName}");
     }
 }

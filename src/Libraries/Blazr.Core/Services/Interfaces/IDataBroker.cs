@@ -17,4 +17,6 @@ public interface IDataBroker
     public ValueTask<CommandResult> CreateItemAsync<TRecord>(CommandRequest<TRecord> request) where TRecord : class, new();
 
     public ValueTask<CommandResult> DeleteItemAsync<TRecord>(CommandRequest<TRecord> request) where TRecord : class, new();
+
+    public ValueTask<CommandResult> SaveItemAsync<TRecord>(CommandRequest<TRecord> request) where TRecord : class, new();
 }

@@ -36,13 +36,26 @@ public static class ApplicationServices
     {
         services.AddDbContextFactory<TDbContext>(options);
         services.AddScoped<IDataBroker, RepositoryDataBroker>();
-        services.AddScoped<ICustomDataBroker, CustomDataBroker>();
+        //services.AddScoped<ICustomDataBroker, CustomDataBroker>();
 
-        services.AddScoped<IListRequestHandler, ListRequestHandler<InMemoryInvoiceDbContext>>();
-        services.AddScoped<IItemRequestHandler, ItemRequestHandler<InMemoryInvoiceDbContext>>();
-        services.AddScoped<IUpdateRequestHandler, UpdateRequestHandler<InMemoryInvoiceDbContext>>();
-        services.AddScoped<ICreateRequestHandler, CreateRequestHandler<InMemoryInvoiceDbContext>>();
-        services.AddScoped<IDeleteRequestHandler, DeleteRequestHandler<InMemoryInvoiceDbContext>>();
+        // Add the standard handlers
+        services.AddScoped<IListRequestHandler, ListRequestServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<IItemRequestHandler, ItemRequestServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<IUpdateRequestHandler, UpdateRequestServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<ICreateRequestHandler, CreateRequestServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<IDeleteRequestHandler, DeleteRequestServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<ISaveRequestHandler, SaveRequestServerHandler<InMemoryInvoiceDbContext>>();
+
+        // Add the base handlers
+        services.AddScoped<ListRequestBaseServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<ItemRequestBaseServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<UpdateRequestBaseServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<CreateRequestBaseServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<DeleteRequestBaseServerHandler<InMemoryInvoiceDbContext>>();
+        services.AddScoped<SaveRequestBaseServerHandler<InMemoryInvoiceDbContext>>();
+
+        // Add custom handlers
+        services.AddScoped<IItemRequestHandler<Customer>, CustomerRequestServerHandler<InMemoryInvoiceDbContext>>();
 
         services.AddInvoiceServerInfrastructureServices();
     }
