@@ -31,6 +31,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notes", "Notes", "{00683F0C-D177-4740-9487-42074CB347C8}"
 	ProjectSection(SolutionItems) = preProject
 		Notes\BlazrGrid.md = Notes\BlazrGrid.md
+		Notes\Data-Pipeline.md = Notes\Data-Pipeline.md
 		Notes\GroupEntities.md = Notes\GroupEntities.md
 		Notes\List-Controller.md = Notes\List-Controller.md
 		Notes\List-Form.md = Notes\List-Form.md
