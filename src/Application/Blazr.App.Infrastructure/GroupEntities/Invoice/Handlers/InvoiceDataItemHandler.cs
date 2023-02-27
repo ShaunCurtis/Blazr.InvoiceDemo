@@ -6,34 +6,40 @@
 
 namespace Blazr.App.Infrastructure;
 
-public sealed class InvoiceDataItemHandler : IItemRequestHandler<InvoiceAggregate>
+public sealed class InvoiceDataItemHandler<TDbContext> : 
+    IItemRequestHandler<InvoiceAggregate>
+    where TDbContext : DbContext
 {
-    private readonly IDataBroker _broker;
-    private ILogger<InvoiceDataItemHandler> _logger;
+    private readonly IDbContextFactory<TDbContext> _factory;
+    private ILogger<InvoiceDataItemHandler<TDbContext>> _logger;
 
-    public InvoiceDataItemHandler(IDataBroker dataBroker, ILogger<InvoiceDataItemHandler> logger)
+    public InvoiceDataItemHandler(IDbContextFactory<TDbContext> factory, ILogger<InvoiceDataItemHandler<TDbContext>> logger)
     {
-        _broker = dataBroker;
+        _factory = factory;
         _logger = logger;
     }
 
     public async ValueTask<ItemQueryResult<InvoiceAggregate>> ExecuteAsync(ItemQueryRequest request)
     {
-        var result = await _broker.GetItemAsync<Invoice>(ItemQueryRequest.Create(request.Uid));
+        if (request == null)
+            throw new DataPipelineException($"No CommandRequest defined in {this.GetType().FullName}");
 
-        var invoice = result.Item ?? new();
+        using var dbContext = _factory.CreateDbContext();
+
+        var invoice = await dbContext.Set<Invoice>().FirstOrDefaultAsync( item => item.Uid == request.Uid); 
 
         // Check if we got an invoice or have defaulted to a new invoice
-        if (!result.Successful)
+        if (invoice is null)
             return ItemQueryResult<InvoiceAggregate>.Failure("Could Not find requested Invoice");
 
-        // Get the items assocaited with the invoice
-        var filters = new List<FilterDefinition> { new FilterDefinition { FilterName = ApplicationConstants.ByInvoiceUid, FilterData = request.Uid.ToString(), } };
-        var query = new ListQueryRequest() { Filters = filters };
-        var listResult = await _broker.GetItemsAsync<InvoiceItem>(query);
 
-        if (listResult.Successful)
-            return ItemQueryResult<InvoiceAggregate>.Success(new(invoice, listResult.Items));
+        // Get the items associated with the invoice
+        var invoiceItems = await dbContext.Set<InvoiceItem>()
+            .Where(item => item.InvoiceUid == request.Uid)
+            .ToListAsync();
+
+        if (invoiceItems is not null)
+            return ItemQueryResult<InvoiceAggregate>.Success(new(invoice, invoiceItems));
 
         return ItemQueryResult<InvoiceAggregate>.Failure("Could Not fufill the request.");
     }

@@ -6,74 +6,59 @@
 
 namespace Blazr.App.Infrastructure;
 
-public sealed class InvoiceDataSaveHandler : ISaveRequestHandler<InvoiceAggregate>
+public sealed class InvoiceDataSaveHandler<TDbContext> 
+    : ISaveRequestHandler<InvoiceAggregate>
+    where TDbContext : DbContext
 {
-    private readonly IDataBroker _broker;
-    private ILogger<InvoiceDataItemHandler> _logger;
+    private readonly IDbContextFactory<TDbContext> _factory;
+    private ILogger<InvoiceDataItemHandler<TDbContext>> _logger;
 
-    public InvoiceDataSaveHandler(IDataBroker dataBroker, ILogger<InvoiceDataItemHandler> logger)
+    public InvoiceDataSaveHandler(IDbContextFactory<TDbContext> factory, ILogger<InvoiceDataItemHandler<TDbContext>> logger)
     {
-        _broker = dataBroker;
+        _factory = factory;
         _logger = logger;
     }
 
     public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceAggregate> request)
     {
-        bool errorTrip = false;
+        if (request == null)
+            throw new DataPipelineException($"No CommandRequest defined in {this.GetType().FullName}");
+
+        using var dbContext = _factory.CreateDbContext();
 
         var invoiceData = request.Item;
         // Create the invoice if it's new
         if (invoiceData.IsNewInvoice)
-        {
-            var result = await _broker.CreateItemAsync<DboInvoice>(CommandRequest<DboInvoice>.Create(invoiceData.Invoice.ToDboInvoice()));
-            if (!result.Successful)
-                _logger.LogError($"Invoice - {invoiceData.Invoice.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
-        }
+            dbContext.Add<DboInvoice>(invoiceData.Invoice.ToDboInvoice());
 
         // Update the invoice if it is dirty)
         if (!invoiceData.IsNewInvoice && invoiceData.InvoiceIsDirty)
-        {
-            var result = await _broker.UpdateItemAsync<DboInvoice>(CommandRequest<DboInvoice>.Create(invoiceData.Invoice.ToDboInvoice()));
-            if (!result.Successful)
-                _logger.LogError($"Invoice - {invoiceData.Invoice.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
-        }
+            dbContext.Update<DboInvoice>(invoiceData.Invoice.ToDboInvoice());
 
         // Update all the existing items
         foreach (var item in invoiceData.UpdatedItems)
-        {
-            var result = await _broker.UpdateItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
-            if (!result.Successful)
-                _logger.LogError($"Invoice Item - {item.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
-        }
+            dbContext.Update<DboInvoiceItem>(item.ToDboInvoiceItem());
 
         // Add all the new items
         foreach (var item in invoiceData.AddedItems)
-        {
-            var result = await _broker.CreateItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
-            if (!result.Successful)
-                _logger.LogError($"Invoice Item - {item.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
-        }
+            dbContext.Add<DboInvoiceItem>(item.ToDboInvoiceItem());
 
         // Remove all the items in the deleted collection
         foreach (var item in invoiceData.DeletedItems)
+            dbContext.Remove<DboInvoiceItem>(item.ToDboInvoiceItem());
+
+        try
         {
-            var result = await _broker.DeleteItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
-            if (!result.Successful)
-                _logger.LogError($"Invoice Item - {item.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
+            var transactions = await dbContext.SaveChangesAsync();
+            return CommandResult.Success();
         }
-
-        return errorTrip
-            ? CommandResult.Failure("Failed to update the invoice")
-            : CommandResult.Success();
+        catch (DbUpdateException)
+        {
+            return CommandResult.Failure("Failed to update the invoice.  Transaction aborted");
+        }
+        catch (Exception e)
+        {
+            return CommandResult.Failure($"An error occured trying to update the database.  Detail: {e.Message} ");
+        }
     }
 }

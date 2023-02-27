@@ -6,7 +6,7 @@
 
 namespace Blazr.Infrastructure;
 
-public sealed class ListRequestServerHandler<TDbContext> 
+public sealed class ListRequestServerHandler<TDbContext>
     : IListRequestHandler
     where TDbContext : DbContext
 {
@@ -28,12 +28,7 @@ public sealed class ListRequestServerHandler<TDbContext>
     {
         IListRequestHandler<TRecord>? _customHandler = null;
 
-        // Try and get a registerted custom handler
-        try
-        {
-            _customHandler = _serviceProvider.GetComponentService<IListRequestHandler<TRecord>>();
-        }
-        catch { }   
+        _customHandler = _serviceProvider.GetComponentService<IListRequestHandler<TRecord>>();
 
         // If we get one then one is registered in DI and we execute it
         if (_customHandler is not null)

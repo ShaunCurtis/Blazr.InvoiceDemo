@@ -6,40 +6,53 @@
 
 namespace Blazr.App.Infrastructure;
 
-public sealed class InvoiceDataDeleteHandler : IDeleteRequestHandler<InvoiceAggregate>
+public sealed class InvoiceDataDeleteHandler<TDbContext>
+    : IDeleteRequestHandler<InvoiceAggregate>
+    where TDbContext : DbContext
 {
-    private readonly IDataBroker _broker;
-    private ILogger<InvoiceDataItemHandler> _logger;
+    private readonly IDbContextFactory<TDbContext> _factory;
+    private ILogger<InvoiceDataItemHandler<TDbContext>> _logger;
 
-    public InvoiceDataDeleteHandler(IDataBroker dataBroker, ILogger<InvoiceDataItemHandler> logger)
+    public InvoiceDataDeleteHandler(IDbContextFactory<TDbContext> factory, ILogger<InvoiceDataItemHandler<TDbContext>> logger)
     {
-        _broker = dataBroker;
+        _factory = factory;
         _logger = logger;
     }
 
     public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceAggregate> request)
     {
-        bool errorTrip = false;
+        if (request == null)
+        {
+            var message = $"No Delete CommandRequest defined in {this.GetType().FullName}";
+            _logger.LogError(message);
+            throw new DataPipelineException(message);
+        }
+
+        using var dbContext = _factory.CreateDbContext();
+
+        var invoiceData = request.Item;
 
         foreach (var item in request.Item.InvoiceItems)
+            dbContext.Remove<DboInvoiceItem>(item.ToDboInvoiceItem());
+
+        dbContext.Remove<DboInvoice>(invoiceData.Invoice.ToDboInvoice());
+
+        try
         {
-            var result = await _broker.DeleteItemAsync<DboInvoiceItem>(CommandRequest<DboInvoiceItem>.Create(item.ToDboInvoiceItem()));
-            if (!result.Successful)
-                _logger.LogError($"InvoiceItem - {item.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
+            var transactions = await dbContext.SaveChangesAsync();
+            return CommandResult.Success();
         }
-
+        catch (DbUpdateException)
         {
-            var result = await _broker.DeleteItemAsync<DboInvoice>(CommandRequest<DboInvoice>.Create(request.Item.Invoice.ToDboInvoice()));
-            if (!result.Successful)
-                _logger.LogError($"InvoiceItem - {request.Item.Invoice.Uid} - {result.Message}");
-
-            errorTrip = !result.Successful | errorTrip;
+            var message = $"Failed to delete the invoice {request.Item.Uid}.  Transaction aborted";
+            _logger.LogError(message);
+            return CommandResult.Failure(message);
         }
-
-        return errorTrip
-            ? CommandResult.Failure("Failed to delete the invoice")
-            : CommandResult.Success();
+        catch (Exception e)
+        {
+            var message = $"An error occured trying to delete invoice {request.Item.Uid}.  Detail: {e.Message}.";
+            _logger.LogError(message);
+            return CommandResult.Failure(message);
+        }
     }
 }

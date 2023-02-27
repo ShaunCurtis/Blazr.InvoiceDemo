@@ -7,7 +7,7 @@ namespace Blazr.Core;
 
 public static class ServiceUtilities
 {
-    public static bool TryGetComponentService<TService>(this IServiceProvider serviceProvider,[NotNullWhen(true)] out TService? service) where TService : class
+    public static bool TryGetComponentService<TService>(this IServiceProvider serviceProvider, [NotNullWhen(true)] out TService? service) where TService : class
     {
         service = serviceProvider.GetComponentService<TService>();
         return service != null;
@@ -18,7 +18,15 @@ public static class ServiceUtilities
         var serviceType = serviceProvider.GetService<TService>()?.GetType();
 
         if (serviceType is null)
-            return ActivatorUtilities.CreateInstance<TService>(serviceProvider);
+            try
+            {
+                var service = ActivatorUtilities.CreateInstance<TService>(serviceProvider);
+                return service;
+            }
+            catch
+            {
+                return null;
+            }
 
         return ActivatorUtilities.CreateInstance(serviceProvider, serviceType) as TService;
     }

@@ -9,8 +9,8 @@ public static class InvoiceCoreServices
 {
     public static void AddInvoiceServerInfrastructureServices(this IServiceCollection services)
     {
-        services.AddTransient<IItemRequestHandler<InvoiceAggregate>, InvoiceDataItemHandler>();
-        services.AddTransient<IDeleteRequestHandler<InvoiceAggregate>, InvoiceDataDeleteHandler>();
-        services.AddTransient<ISaveRequestHandler<InvoiceAggregate>, InvoiceDataSaveHandler>();
+        services.AddTransient<IItemRequestHandler<InvoiceAggregate>, InvoiceDataItemHandler<InMemoryInvoiceDbContext>>();
+        services.AddTransient<IDeleteRequestHandler<InvoiceAggregate>, InvoiceDataDeleteHandler<InMemoryInvoiceDbContext>>();
+        services.AddTransient<ISaveRequestHandler<InvoiceAggregate>, InvoiceDataSaveHandler<InMemoryInvoiceDbContext>>();
     }
 }
