@@ -61,8 +61,15 @@ public class RepositoryBrokerTests
 
         presenter.Item.AddInvoiceItem(newItem);
 
+        // Save the changes to the database
+        await presenter.SaveAsync();
+
+        // Get a new InvoiceNManager instance and load it
+        var newPresenter = provider.GetService<InvoicePresenter>()!;
+        await newPresenter.LoadAsync(testUid);
+
         Assert.Equal(testUid, presenter.Item.Invoice.Uid);
-        Assert.Equal(items + 1, presenter.Item.InvoiceItems.Count());
+        Assert.Equal(items + 1, newPresenter.Item.InvoiceItems.Count());
     }
 
     [Fact]
