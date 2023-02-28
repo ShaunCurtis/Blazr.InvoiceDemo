@@ -22,7 +22,11 @@ public sealed class InvoiceDataSaveHandler<TDbContext>
     public async ValueTask<CommandResult> ExecuteAsync(CommandRequest<InvoiceAggregate> request)
     {
         if (request == null)
-            throw new DataPipelineException($"No CommandRequest defined in {this.GetType().FullName}");
+        {
+            var message = $"No Save CommandRequest defined in {this.GetType().FullName}";
+            _logger.LogError(message);
+            throw new DataPipelineException(message);
+        }
 
         using var dbContext = _factory.CreateDbContext();
 
@@ -54,11 +58,15 @@ public sealed class InvoiceDataSaveHandler<TDbContext>
         }
         catch (DbUpdateException)
         {
-            return CommandResult.Failure("Failed to update the invoice.  Transaction aborted");
+            var message = $"Failed to save the invoice {request.Item.Uid}.  Transaction aborted";
+            _logger.LogError(message);
+            return CommandResult.Failure(message);
         }
         catch (Exception e)
         {
-            return CommandResult.Failure($"An error occured trying to update the database.  Detail: {e.Message} ");
+            var message = $"An error occured trying to save invoice {request.Item.Uid}.  Detail: {e.Message}.";
+            _logger.LogError(message);
+            return CommandResult.Failure(message);
         }
     }
 }

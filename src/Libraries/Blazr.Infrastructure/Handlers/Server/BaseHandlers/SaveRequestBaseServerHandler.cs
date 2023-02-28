@@ -10,10 +10,12 @@ public sealed class SaveRequestBaseServerHandler<TDbContext>
     : ISaveRequestHandler
     where TDbContext : DbContext
 {
-    private readonly IDbContextFactory<TDbContext> _factory;
+    private ILogger<SaveRequestBaseServerHandler<TDbContext>> _logger;
 
-    public SaveRequestBaseServerHandler(IDbContextFactory<TDbContext> factory)
-        => _factory = factory;
+    public SaveRequestBaseServerHandler(ILogger<SaveRequestBaseServerHandler<TDbContext>> logger)
+    {
+        _logger = logger;
+    }
 
     public async ValueTask<CommandResult> ExecuteAsync<TRecord>(CommandRequest<TRecord> request)
         where TRecord : class, new()
