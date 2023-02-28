@@ -187,6 +187,18 @@ public sealed class InvoiceTestDataProvider
             };
     }
 
+    public Invoice GetNewInvoice()
+    {
+        return new()
+        {
+            Uid = Guid.NewGuid(),
+            CustomerUid = _customers![Random.Shared.Next(Customers.Count())].Uid,
+            InvoiceDate = DateOnly.FromDateTime(DateTime.Now),
+            InvoiceNumber = "1006",
+            InvoicePrice = 1000m
+        };
+    }
+
     public Guid TestInvoiceUid
         => _invoices?.First().Uid ?? Guid.Empty;
 

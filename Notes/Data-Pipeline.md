@@ -184,5 +184,4 @@ public sealed class CustomerRequestServerHandler<TDbContext>
         return await _baseHandler.ExecuteAsync<Customer>(request);
     }
 }
-
 ```
