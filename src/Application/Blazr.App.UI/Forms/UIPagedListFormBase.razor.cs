@@ -18,6 +18,7 @@ public partial class UIPagedListFormBase<TRecord, TEntityService> : UIWrapperBas
     public IListPresenter<TRecord, TEntityService> Presenter { get; set; } = default!;
 
     protected IModalDialog? modalDialog;
+    protected virtual RenderFragment? HeaderRightContent { get; }
 
     private IDisposable? _disposable;
 

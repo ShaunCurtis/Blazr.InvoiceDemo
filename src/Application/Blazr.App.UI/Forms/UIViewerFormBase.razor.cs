@@ -17,6 +17,7 @@ public abstract partial class UIViewerFormBase<TRecord, TEntityService> : UIWrap
     [Parameter] public Guid Uid { get; set; }
 
     protected string ExitUrl { get; set; } = "/";
+    protected virtual RenderFragment? HeaderRightContent { get; }
 
     public async override Task SetParametersAsync(ParameterView parameters)
     {

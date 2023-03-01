@@ -14,7 +14,14 @@
     {
         <PageTitle>@this.FormTitle</PageTitle>
 
-        <h3 class="mb-4 pb-3 border-bottom">@this.FormTitle</h3>
+        <div class="d-flex flex-row mb-4 pt-1 pb-2 border-bottom">
+            <div class="flex-fill justify-content-start">
+                <span class="h3">@this.FormTitle</span>
+            </div>
+            <div class="justify-content-end">
+                @this.HeaderRightContent
+            </div>
+        </div>
 
         <CascadingValue Value="Presenter.EditStateContext">
             @this.Content

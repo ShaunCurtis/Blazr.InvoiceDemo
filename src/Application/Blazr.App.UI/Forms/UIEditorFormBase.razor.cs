@@ -21,6 +21,7 @@ public abstract partial class UIEditorFormBase<TRecord, TEditContext, TEntitySer
     protected TEditContext EditContext = default!;
     private IDisposable? _disposable;
     protected string ExitUrl { get; set; } = "/";
+    protected virtual RenderFragment? HeaderRightContent {get;} 
 
     public async override Task SetParametersAsync(ParameterView parameters)
     {
