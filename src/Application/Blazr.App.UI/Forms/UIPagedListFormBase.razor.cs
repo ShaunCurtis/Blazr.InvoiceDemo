@@ -72,6 +72,13 @@ public partial class UIPagedListFormBase<TRecord, TEntityService> : UIWrapperBas
             this.NavManager.NavigateTo($"{this.UIEntityService.Url}/view/{id}");
     }
 
+    protected Task OnDashboardAsync(TRecord record)
+    {
+        var id = RecordUtilities.GetIdentity(record);
+        this.NavManager.NavigateTo($"{this.UIEntityService.Url}/dash/{id}");
+        return Task.CompletedTask;
+    }
+
     public async ValueTask DisposeAsync()
     {
         _disposable?.Dispose();

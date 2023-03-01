@@ -1,9 +1,25 @@
 ﻿@page "/InvoiceManager/{uid:guid}"
+@page "/Invoice/Dash/{uid:guid}"
 @namespace Blazr.App.UI
 @inherits UIControlBase
 
-<InvoiceViewForm Uid=this.Uid />
+<div class="row">
+    <div class="col-12 mb-2">
+        <UIButtonGroup>
+            <UIButton Class="@btnCss(true)" ClickEvent="() => this.SetEditor(true)">Editor</UIButton>
+            <UIButton Class="@btnCss(false)" ClickEvent="() => this.SetEditor(false)">Viewer</UIButton>
+        </UIButtonGroup>
+    </div>
+</div>
+@if (isEditor)
+{
+    <InvoiceEditForm Uid=this.Uid />
+}
+else
+{
+    <InvoiceViewForm Uid=this.Uid />
 
+}
 <InvoiceItemPagedList InvoiceUid=this.Uid />
 
 @code {
@@ -11,10 +27,22 @@
 
     [Inject] private InvoicePresenter Presenter { get; set; } = default!;
 
+    private bool isEditor = false;
+
     protected async override ValueTask<bool> OnParametersChangedAsync(bool firstRender)
     {
         await Presenter.LoadAsync(Uid);
         return true;
     }
 
+    private string btnCss(bool iseditor)
+        => iseditor ? "btn btn-sm btn-primary" : "btn btn-sm btn-secondary";
+
+    private void SetEditor(bool value)
+    {
+        isEditor = value;
+        this.StateHasChanged();
+    }
+
 }
+            
