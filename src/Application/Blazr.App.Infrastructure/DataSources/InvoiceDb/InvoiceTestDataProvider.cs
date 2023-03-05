@@ -163,8 +163,9 @@ public sealed class InvoiceTestDataProvider
         foreach (var invoice in this.Invoices)
         {
             var product = _products![Random.Shared.Next(_products.Count())];
-            invoiceItems.Add(new() { InvoiceUid = invoice.Uid, ProductUid = product.Uid, ItemQuantity = Random.Shared.Next(4), ItemUnitPrice = product.ProductUnitPrice });
-            invoiceItems.Add(new() { InvoiceUid = invoice.Uid, ProductUid = product.Uid, ItemQuantity = Random.Shared.Next(4), ItemUnitPrice = product.ProductUnitPrice });
+            invoiceItems.Add(new() { InvoiceUid = invoice.Uid, ProductUid = product.Uid, ItemQuantity = Random.Shared.Next(1,4), ItemUnitPrice = product.ProductUnitPrice });
+            product = _products![Random.Shared.Next(_products.Count())];
+            invoiceItems.Add(new() { InvoiceUid = invoice.Uid, ProductUid = product.Uid, ItemQuantity = Random.Shared.Next(1,4), ItemUnitPrice = product.ProductUnitPrice });
         }
 
         _invoiceItems = invoiceItems;
