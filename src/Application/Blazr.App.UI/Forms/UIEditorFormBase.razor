@@ -14,17 +14,32 @@
     {
         <PageTitle>@this.FormTitle</PageTitle>
 
+        @this.HeaderContent
+
+        <CascadingValue Value="Presenter.EditStateContext">
+            @this.Content
+            @this.ActionBarContent
+        </CascadingValue>
+
+        <NavigationLock ConfirmExternalNavigation=this.Presenter.EditStateContext.IsDirty />
+    };
+    
+    protected virtual RenderFragment? HeaderButtonContent { get; }
+
+    protected virtual RenderFragment HeaderContent => (__builder) =>
+    {
         <div class="d-flex flex-row mb-4 pt-1 pb-2 border-bottom">
             <div class="flex-fill justify-content-start">
                 <span class="h3">@this.FormTitle</span>
             </div>
             <div class="justify-content-end">
-                @this.HeaderRightContent
+                @this.HeaderButtonContent
             </div>
         </div>
+    };
 
-        <CascadingValue Value="Presenter.EditStateContext">
-            @this.Content
+    protected virtual RenderFragment ActionBarContent => (__builder) =>
+    {
             <div class="row">
                 <div class="col-12 text-end">
                     <UIButton ButtonType=UIButtonType.Warning Hidden=_isClean ClickEvent=this.OnReset>Reset</UIButton>
@@ -33,8 +48,5 @@
                     <UIButton ButtonType=UIButtonType.ExitWithoutSave Hidden=_isClean ClickEvent=this.OnExit>Exit without Saving</UIButton>
                 </div>
             </div>
-        </CascadingValue>
-
-        <NavigationLock ConfirmExternalNavigation=this.Presenter.EditStateContext.IsDirty />
     };
 }
