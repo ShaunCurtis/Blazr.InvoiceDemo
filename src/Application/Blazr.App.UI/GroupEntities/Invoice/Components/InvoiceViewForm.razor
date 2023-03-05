@@ -2,6 +2,7 @@
 @inherits UIViewerFormBase<Invoice, CustomerEntityService>
 
 <div class="row">
+
     <div class="col-12 col-lg-6 mb-2">
         <BlazrTextViewControl Label="Invoice No" Value="@this.Presenter.Item.InvoiceNumber" />
     </div>
@@ -23,3 +24,7 @@
     </div>
 
 </div>
+
+@code {
+    protected override RenderFragment ActionBarContent => (builder) => { };
+}

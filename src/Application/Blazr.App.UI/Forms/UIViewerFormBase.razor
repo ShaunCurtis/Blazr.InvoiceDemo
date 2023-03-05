@@ -9,20 +9,32 @@
     protected override RenderFragment TemplatedContent => (__builder) =>
     {
         <PageTitle>@this.FormTitle</PageTitle>
-                <div class="d-flex flex-row mb-4 pt-1 pb-2 border-bottom">
+        @this.HeaderContent
+        @this.Content
+        @this.ActionBarContent
+    };
+
+
+    protected virtual RenderFragment HeaderContent => (__builder) =>
+    {
+        <div class="d-flex flex-row mb-4 pt-1 pb-2 border-bottom">
             <div class="flex-fill justify-content-start">
                 <span class="h3">@this.FormTitle</span>
             </div>
             <div class="justify-content-end">
-                @this.HeaderRightContent
+                @this.HeaderButtonContent
             </div>
         </div>
-        
-            @this.Content
-            <div class="row">
-                <div class="col-12 text-end">
-                    <UIButton ButtonType=UIButtonType.Exit ClickEvent=this.OnExit>Exit</UIButton>
-                </div>
+    };
+
+    protected virtual RenderFragment? HeaderButtonContent { get; }
+
+    protected virtual RenderFragment ActionBarContent => (__builder) =>
+    {
+        <div class="row">
+            <div class="col-12 text-end">
+                <UIButton ButtonType=UIButtonType.Exit ClickEvent=this.OnExit>Exit</UIButton>
             </div>
+        </div>
     };
 }
